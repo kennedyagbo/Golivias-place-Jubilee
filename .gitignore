@@ -1,0 +1,11 @@
+node_modules/
+backend/node_modules/
+backend/dist/
+.vercel-tmp/
+.env
+.env.*
+!*.example
+
+# Uploaded images and JSON edits are runtime data on Render, not source files.
+uploads/
+data/uploads/

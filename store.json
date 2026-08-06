@@ -1,0 +1,303 @@
+{
+  "products": [
+    {
+      "id": "meat-pie",
+      "name": "Meat Pie",
+      "price": 1000,
+      "category": "pastries",
+      "image": "Meat Pie.jpg",
+      "desc": "Golden, flaky pastry filled with seasoned minced meat and potatoes.",
+      "ingredients": "Flour, minced beef, potatoes, onions, spices, vegetable oil.",
+      "allergens": "Contains wheat (gluten). May contain traces of eggs.",
+      "bestSeller": true,
+      "special": true,
+      "isAvailable": true,
+      "stock": 8
+    },
+    {
+      "id": "doughnut",
+      "name": "Doughnut",
+      "price": 1000,
+      "category": "pastries",
+      "image": "Doughnut.jpg",
+      "desc": "Soft, fluffy doughnut glazed to sweet perfection.",
+      "ingredients": "Flour, sugar, yeast, eggs, butter, vegetable oil, glaze.",
+      "allergens": "Contains wheat (gluten), eggs, dairy.",
+      "bestSeller": true,
+      "special": false,
+      "isAvailable": true,
+      "stock": 5
+    },
+    {
+      "id": "chin-chin",
+      "name": "Chin Chin",
+      "price": 1000,
+      "category": "snacks",
+      "image": "Chin Chin.jpg",
+      "desc": "Crunchy, golden fried snack with a hint of nutmeg.",
+      "ingredients": "Flour, sugar, butter, nutmeg, eggs, vegetable oil.",
+      "allergens": "Contains wheat (gluten), eggs, dairy.",
+      "bestSeller": false,
+      "special": false,
+      "isAvailable": true,
+      "stock": 10
+    },
+    {
+      "id": "puff-puff",
+      "name": "Puff Puff",
+      "price": 1000,
+      "category": "snacks",
+      "image": "Puff Puff.jpg",
+      "desc": "5 pieces of soft, airy fried dough balls — classic Nigerian street snack.",
+      "ingredients": "Flour, sugar, yeast, water, vegetable oil, nutmeg.",
+      "allergens": "Contains wheat (gluten).",
+      "bestSeller": true,
+      "special": true,
+      "unit": "5 pieces",
+      "isAvailable": true,
+      "stock": 12
+    },
+    {
+      "id": "samosa",
+      "name": "Samosa",
+      "price": 1500,
+      "category": "snacks",
+      "image": "Samosa.jpg",
+      "desc": "5 pieces of crispy triangular pastry filled with spiced vegetables.",
+      "ingredients": "Flour, potatoes, peas, carrots, onions, curry spice, vegetable oil.",
+      "allergens": "Contains wheat (gluten).",
+      "bestSeller": false,
+      "special": false,
+      "unit": "5 pieces",
+      "isAvailable": true,
+      "stock": 7
+    },
+    {
+      "id": "spring-rolls",
+      "name": "Spring Rolls",
+      "price": 1500,
+      "category": "snacks",
+      "image": "Spring rolls.jpg",
+      "desc": "5 pieces of crispy rolls with vegetable filling.",
+      "ingredients": "Spring roll wrappers, cabbage, carrots, green beans, onions, soy sauce.",
+      "allergens": "Contains wheat (gluten), soy.",
+      "bestSeller": false,
+      "special": true,
+      "unit": "5 pieces",
+      "isAvailable": true,
+      "stock": 9
+    },
+    {
+      "id": "bread",
+      "name": "Bread",
+      "price": 1500,
+      "category": "bakery",
+      "image": "Bread.jpg",
+      "desc": "Freshly baked, soft and fluffy loaf — perfect for any meal.",
+      "ingredients": "Flour, yeast, sugar, salt, butter, water.",
+      "allergens": "Contains wheat (gluten).",
+      "bestSeller": true,
+      "special": false,
+      "isAvailable": true,
+      "stock": 6
+    },
+    {
+      "id": "cake-small",
+      "name": "Cake (Small)",
+      "price": 5000,
+      "category": "cakes",
+      "image": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop",
+      "desc": "Small celebration cake — serves 6-8 people.",
+      "ingredients": "Flour, sugar, butter, eggs, vanilla, frosting, food colors.",
+      "allergens": "Contains wheat (gluten), eggs, dairy.",
+      "bestSeller": false,
+      "special": false,
+      "size": "Small",
+      "isAvailable": true,
+      "stock": 3
+    },
+    {
+      "id": "cake-medium",
+      "name": "Cake (Medium)",
+      "price": 10000,
+      "category": "cakes",
+      "image": "Medium cake.jpeg",
+      "desc": "Medium celebration cake — serves 12-16 people.",
+      "ingredients": "Flour, sugar, butter, eggs, vanilla, frosting, food colors.",
+      "allergens": "Contains wheat (gluten), eggs, dairy.",
+      "bestSeller": false,
+      "special": false,
+      "size": "Medium",
+      "isAvailable": true,
+      "stock": 2
+    },
+    {
+      "id": "cake-large",
+      "name": "Cake (Large)",
+      "price": 15000,
+      "category": "cakes",
+      "image": "Big cake.jpeg",
+      "desc": "Large celebration cake — serves 20-30 people.",
+      "ingredients": "Flour, sugar, butter, eggs, vanilla, frosting, food colors.",
+      "allergens": "Contains wheat (gluten), eggs, dairy.",
+      "bestSeller": false,
+      "special": false,
+      "size": "Large",
+      "isAvailable": true,
+      "stock": 1
+    },
+    {
+      "id": "abacha",
+      "name": "Abacha",
+      "price": 500,
+      "category": "local-dishes",
+      "image": "Abacha.jpeg",
+      "desc": "Delicious African salad made with shredded cassava.",
+      "ingredients": "Cassava, palm oil, onions, garden eggs, spices.",
+      "allergens": "None.",
+      "bestSeller": false,
+      "special": false,
+      "unit": "per plate",
+      "isAvailable": true,
+      "stock": 4
+    },
+    {
+      "id": "smoothie",
+      "name": "Smoothie",
+      "price": 1500,
+      "category": "drinks",
+      "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=400&fit=crop",
+      "desc": "Fresh, creamy fruit smoothie.",
+      "ingredients": "Fresh fruits, yogurt, ice.",
+      "allergens": "Contains dairy.",
+      "bestSeller": false,
+      "special": false,
+      "isAvailable": true,
+      "stock": 6
+    },
+    {
+      "id": "coke",
+      "name": "Coke",
+      "price": 500,
+      "category": "drinks",
+      "image": "Coke.jpeg",
+      "desc": "Classic Coca-Cola.",
+      "ingredients": "Carbonated water, sugar, caffeine, flavorings.",
+      "allergens": "None.",
+      "bestSeller": false,
+      "special": false,
+      "unit": "50cl",
+      "isAvailable": true,
+      "stock": 15
+    },
+    {
+      "id": "fanta",
+      "name": "Fanta",
+      "price": 500,
+      "category": "drinks",
+      "image": "Fanta.jpeg",
+      "desc": "Refreshing orange soda.",
+      "ingredients": "Carbonated water, sugar, orange flavorings.",
+      "allergens": "None.",
+      "bestSeller": false,
+      "special": false,
+      "unit": "50cl",
+      "isAvailable": true,
+      "stock": 15
+    },
+    {
+      "id": "sprite",
+      "name": "Sprite",
+      "price": 500,
+      "category": "drinks",
+      "image": "Sprite.jpeg",
+      "desc": "Lemon-lime soda.",
+      "ingredients": "Carbonated water, sugar, lemon-lime flavorings.",
+      "allergens": "None.",
+      "bestSeller": false,
+      "special": false,
+      "unit": "50cl",
+      "isAvailable": true,
+      "stock": 15
+    },
+    {
+      "id": "golivias-water",
+      "name": "Golivia’s Water",
+      "price": 300,
+      "category": "drinks",
+      "image": "Goliviaswater.jpeg",
+      "desc": "Pure, clean drinking water.",
+      "ingredients": "Purified water.",
+      "allergens": "None.",
+      "bestSeller": false,
+      "special": false,
+      "isAvailable": true,
+      "stock": 25
+    }
+  ],
+  "orders": [],
+  "categories": [
+    {
+      "id": "pastries",
+      "name": "Pastries"
+    },
+    {
+      "id": "snacks",
+      "name": "Snacks"
+    },
+    {
+      "id": "bakery",
+      "name": "Bakery"
+    },
+    {
+      "id": "cakes",
+      "name": "Cakes"
+    },
+    {
+      "id": "drinks",
+      "name": "Drinks"
+    }
+  ],
+  "promotions": [
+    {
+      "id": "promo-1",
+      "name": "Free Delivery",
+      "code": "FREEDELIVERY",
+      "type": "FREE_DELIVERY",
+      "value": 0,
+      "active": true
+    },
+    {
+      "id": "promo-2",
+      "name": "First Order Discount",
+      "code": "FIRSTORDER",
+      "type": "PERCENT",
+      "value": 10,
+      "active": true
+    }
+  ],
+  "reviews": [],
+  "customers": [],
+  "siteContent": {
+    "heroText": "GOLIVIA’S PLACE — Fresh pastries & snacks delivered fast in Makurdi",
+    "aboutText": "Welcome to Golivia's Place — fresh pastries, snacks, and celebration cakes made daily.",
+    "businessHours": "Mon-Sun 8:00 AM - 9:00 PM"
+  },
+  "settings": {
+    "restaurantName": "Golivia's Place",
+    "phone": "09043474647",
+    "email": "goliviaresources2010@gmail.com",
+    "address": "Makurdi, Benue State",
+    "currency": "NGN",
+    "deliveryFee": 500,
+    "minimumOrder": 10000,
+    "taxPercentage": 0,
+    "isOpen": true
+  },
+  "adminProfile": {
+    "name": "Admin",
+    "email": "goliviaresources2010@gmail.com",
+    "phone": "+23409043474647"
+  },
+  "notifications": []
+}

@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#E53935">
+<meta name="description" content="Order fresh pastries, snacks and celebration cakes from Golivia's Place in Makurdi.">
+<title>Golivia's Place — Fresh Pastries & Snacks Delivered Fast</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: '#E53935',
+        'brand-dark': '#C62828',
+        orange: '#FB8C00',
+        'orange-light': '#FFF3E0',
+        green: '#43A047',
+        'green-light': '#E8F5E9',
+        cream: '#FFF8F1',
+        'cream-dark': '#F5EDE3',
+        dark: '#1C1C1C',
+        muted: '#666666',
+      },
+      fontFamily: {
+        display: ['Fredoka One', 'cursive'],
+        body: ['Poppins', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior: smooth; }
+body { font-family:'Poppins',sans-serif; background:#FFF8F1; color:#1C1C1C; overflow-x:hidden; }
+button, input, select, textarea { font:inherit; }
+button, a { touch-action:manipulation; }
+img { max-width:100%; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:#FFF8F1; }
+::-webkit-scrollbar-thumb { background:#E53935; border-radius:3px; }
+
+/* 食物背景混合层 */
+.food-bg-layer {
+  position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.04;
+  background-image:
+    url('https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1548507200-cf21f2ae402e?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop'),
+    url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop');
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+  animation: bgDrift 60s linear infinite;
+}
+@keyframes bgDrift {
+  0% { background-position: 0 0, 100px 50px, 200px 100px, 50px 150px, 150px 0, 250px 50px, 100px 200px, 0 100px; }
+  100% { background-position: 200px 200px, 300px 250px, 0 300px, 250px 350px, 350px 200px, 50px 250px, 300px 0, 200px 300px; }
+}
+
+/* 视图切换 */
+.view { display:none; position:relative; z-index:1; min-height:100vh; padding-bottom:80px; }
+.view.active { display:block; animation: viewIn 0.3s ease; }
+@keyframes viewIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* 英雄区域 */
+.hero-section {
+  position:relative; min-height:92vh; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, rgba(28,28,28,0.75) 0%, rgba(28,28,28,0.4) 50%, rgba(229,57,53,0.3) 100%),
+    url('Meat Pie.jpg') center/cover no-repeat;
+}
+.hero-section::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:120px;
+  background: linear-gradient(to top, #FFF8F1, transparent);
+}
+
+/* 按钮样式 */
+.btn-brand {
+  background:#E53935; color:#fff; border:none; border-radius:12px; padding:14px 32px;
+  font-weight:700; font-size:16px; cursor:pointer; transition:all 0.2s;
+  box-shadow: 0 4px 16px rgba(229,57,53,0.35); display:inline-flex; align-items:center; gap:8px;
+}
+.btn-brand:hover { background:#C62828; transform:translateY(-2px); box-shadow:0 6px 24px rgba(229,57,53,0.45); }
+.btn-brand:active { transform:translateY(0); }
+.btn-outline {
+  background:transparent; color:#fff; border:2px solid rgba(255,255,255,0.6); border-radius:12px;
+  padding:12px 28px; font-weight:600; font-size:16px; cursor:pointer; transition:all 0.2s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn-outline:hover { border-color:#fff; background:rgba(255,255,255,0.1); }
+.btn-sm { padding:10px 20px; font-size:14px; border-radius:10px; }
+.btn-full { width:100%; justify-content:center; }
+
+/* 产品卡片 */
+.product-card {
+  background:#fff; border-radius:16px; overflow:hidden; transition:all 0.3s;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06); position:relative;
+}
+.product-card:hover { transform:translateY(-4px); box-shadow:0 8px 32px rgba(0,0,0,0.12); }
+.product-card img { width:100%; height:180px; object-fit:cover; transition:transform 0.4s; }
+.product-card:hover img { transform:scale(1.05); }
+.product-card .img-wrap { overflow:hidden; position:relative; }
+
+/* 标签 */
+.tag-best { position:absolute; top:10px; left:10px; background:#FB8C00; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px; }
+.tag-special { position:absolute; top:10px; right:10px; background:#E53935; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+
+/* 底部导航 */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100; background:#fff;
+  border-top:1px solid #eee; display:flex; justify-content:space-around; padding:6px 0 env(safe-area-inset-bottom, 8px);
+  box-shadow:0 -4px 20px rgba(0,0,0,0.08);
+}
+.bottom-nav button {
+  display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 12px;
+  background:none; border:none; cursor:pointer; color:#999; font-size:10px; font-weight:500; transition:all 0.2s;
+}
+.bottom-nav button.active { color:#E53935; }
+.bottom-nav button i { font-size:20px; }
+.bottom-nav .cart-badge {
+  position:absolute; top:0; right:4px; background:#E53935; color:#fff; font-size:10px;
+  width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;
+}
+
+/* 置顶购物车条 */
+.sticky-cart {
+  position:fixed; bottom:72px; left:12px; right:12px; z-index:99; display:none;
+  background:#E53935; color:#fff; border-radius:14px; padding:14px 20px;
+  box-shadow:0 8px 32px rgba(229,57,53,0.4); cursor:pointer; transition:all 0.3s;
+}
+.sticky-cart.show { display:flex; align-items:center; justify-content:space-between; animation:slideUp 0.3s ease; }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* WhatsApp浮动按钮 */
+.wa-float {
+  position:fixed; bottom:90px; right:16px; z-index:98; width:56px; height:56px;
+  background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 20px rgba(37,211,102,0.4); cursor:pointer; transition:all 0.3s;
+  animation: waPulse 2s infinite;
+}
+.wa-float:hover { transform:scale(1.1); }
+@keyframes waPulse { 0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.4)} 50%{box-shadow:0 4px 30px rgba(37,211,102,0.7)} }
+
+/* 模态框 */
+.modal-overlay {
+  position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.5); display:none;
+  align-items:flex-end; justify-content:center; backdrop-filter:blur(4px);
+}
+.modal-overlay.show { display:flex; }
+.modal-content {
+  background:#fff; border-radius:20px 20px 0 0; width:100%; max-width:500px;
+  max-height:90vh; overflow-y:auto; padding:24px; animation:modalIn 0.3s ease;
+}
+@keyframes modalIn { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+/* Toast通知 */
+.toast {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:300;
+  padding:14px 24px; border-radius:12px; color:#fff; font-weight:600; font-size:14px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.2); display:none; animation:toastIn 0.3s ease;
+  max-width:90%; text-align:center;
+}
+.toast.show { display:block; }
+.toast.success { background:#43A047; }
+.toast.error { background:#E53935; }
+.toast.info { background:#FB8C00; }
+@keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(-20px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+/* 数量选择器 */
+.qty-control { display:flex; align-items:center; gap:0; border:2px solid #eee; border-radius:10px; overflow:hidden; }
+.qty-control button {
+  width:34px; height:34px; border:none; background:#f9f9f9; cursor:pointer; font-size:16px; font-weight:700; color:#1C1C1C; transition:background 0.2s;
+}
+.qty-control button:hover { background:#eee; }
+.qty-control span { width:36px; text-align:center; font-weight:700; font-size:14px; }
+
+/* 搜索栏 */
+.search-bar {
+  display:flex; align-items:center; background:#fff; border:2px solid #eee; border-radius:14px;
+  padding:0 16px; transition:border-color 0.2s;
+}
+.search-bar:focus-within { border-color:#E53935; }
+.search-bar input { flex:1; border:none; outline:none; padding:14px 10px; font-size:15px; background:transparent; font-family:'Poppins',sans-serif; }
+.search-bar i { color:#999; }
+
+/* 分类标签 */
+.cat-btn {
+  padding:10px 20px; border-radius:25px; border:2px solid #eee; background:#fff;
+  font-weight:600; font-size:13px; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+  font-family:'Poppins',sans-serif; color:#666;
+}
+.cat-btn.active { background:#E53935; color:#fff; border-color:#E53935; }
+.cat-btn:hover:not(.active) { border-color:#E53935; color:#E53935; }
+
+/* 订单状态 */
+.status-step { display:flex; align-items:center; gap:10px; }
+.status-dot { width:14px; height:14px; border-radius:50%; border:3px solid #ddd; background:#fff; transition:all 0.3s; flex-shrink:0; }
+.status-dot.done { background:#43A047; border-color:#43A047; }
+.status-dot.current { border-color:#E53935; animation:statusPulse 1.5s infinite; }
+@keyframes statusPulse { 0%,100%{box-shadow:0 0 0 0 rgba(229,57,53,0.4)} 50%{box-shadow:0 0 0 8px rgba(229,57,53,0)} }
+.status-line { width:3px; height:30px; background:#ddd; margin-left:5.5px; }
+.status-line.done { background:#43A047; }
+
+/* 折扣横幅 */
+.promo-banner {
+  background: linear-gradient(135deg, #FB8C00, #F57C00);
+  color:#fff; border-radius:14px; padding:16px 20px; position:relative; overflow:hidden;
+}
+.promo-banner::after {
+  content:''; position:absolute; top:-50%; right:-20%; width:200px; height:200px;
+  background:rgba(255,255,255,0.1); border-radius:50%;
+}
+
+/* 管理员表格 */
+.admin-table { width:100%; border-collapse:collapse; font-size:13px; }
+.admin-table th { background:#f9f9f9; padding:12px; text-align:left; font-weight:600; color:#666; border-bottom:2px solid #eee; }
+.admin-table td { padding:12px; border-bottom:1px solid #f0f0f0; vertical-align:top; }
+
+/* "You don chop?" 动画 */
+.chop-text {
+  font-family:'Fredoka One',cursive; color:#FB8C00; text-shadow:2px 2px 0 rgba(0,0,0,0.1);
+  animation:chopBounce 2s ease infinite;
+}
+@keyframes chopBounce { 0%,100%{transform:scale(1) rotate(-1deg)} 50%{transform:scale(1.05) rotate(1deg)} }
+
+/* 评分星星 */
+.stars { color:#FB8C00; }
+
+/* FAQ手风琴 */
+.faq-item { border-bottom:1px solid #eee; }
+.faq-q { padding:16px 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; }
+.faq-a { max-height:0; overflow:hidden; transition:max-height 0.3s ease; color:#666; line-height:1.7; }
+.faq-item.open .faq-a { max-height:200px; }
+.faq-item.open .faq-q i { transform:rotate(180deg); }
+.faq-q i { transition:transform 0.3s; color:#E53935; }
+
+/* 管理面板 */
+.admin-shell { display:grid; gap:16px; }
+.admin-sidebar { background:#fff; border-radius:24px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
+.admin-sidebar button { width:100%; border:none; background:transparent; text-align:left; padding:12px 14px; border-radius:12px; color:#666; font-weight:600; display:flex; align-items:center; gap:10px; cursor:pointer; transition:all 0.2s; }
+.admin-sidebar button:hover, .admin-sidebar button.active { background:#FFF3E0; color:#E53935; }
+.admin-main { background:#fff; border-radius:24px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
+.admin-topbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
+.admin-badge { display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:#E53935; color:#fff; font-size:11px; font-weight:700; }
+.admin-grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+.admin-card { background:#FFF8F1; border:1px solid #f3e7db; border-radius:18px; padding:14px; }
+.admin-table-wrap { overflow-x:auto; }
+.admin-input, .admin-select, .admin-textarea { width:100%; border:2px solid #eee; border-radius:12px; padding:10px 12px; outline:none; font:inherit; background:#fff; }
+.admin-input:focus, .admin-select:focus, .admin-textarea:focus { border-color:#E53935; }
+.admin-btn { border:none; border-radius:12px; padding:10px 14px; cursor:pointer; font-weight:700; background:#E53935; color:#fff; }
+.admin-btn.secondary { background:#f2f2f2; color:#333; }
+.admin-btn.success { background:#43A047; }
+.admin-btn.warn { background:#FB8C00; }
+.admin-chip { display:inline-flex; align-items:center; gap:6px; padding:5px 9px; border-radius:999px; font-size:11px; font-weight:700; background:#fff; border:1px solid #eee; }
+.admin-chip.active { background:#E8F5E9; color:#43A047; border-color:#8BC34A; }
+.admin-chip.inactive { background:#FFF3E0; color:#FB8C00; border-color:#FFB74D; }
+@media(min-width:900px) {
+  .admin-shell { grid-template-columns:240px 1fr; }
+}
+
+/* 响应式 */
+@media(min-width:768px) {
+  .bottom-nav { max-width:500px; left:50%; transform:translateX(-50%); border-radius:20px 20px 0 0; }
+  .sticky-cart { max-width:500px; left:50%; transform:translateX(-50%); }
+  .wa-float { bottom:100px; right:calc(50% - 270px); }
+  .modal-content { border-radius:20px; margin-bottom:20px; }
+  .modal-overlay { align-items:center; }
+}
+@media(max-width:640px) {
+  .view { padding-bottom:96px; }
+  .hero-section { min-height:78svh; align-items:flex-end; padding-bottom:90px; }
+  .hero-section::after { height:72px; }
+  .btn-brand, .btn-outline { min-height:48px; justify-content:center; }
+  .bottom-nav { padding-bottom:max(6px, env(safe-area-inset-bottom)); }
+  .bottom-nav button { min-width:56px; padding:6px 8px; }
+  .sticky-cart { bottom:calc(76px + env(safe-area-inset-bottom)); padding:12px 14px; }
+  .wa-float { bottom:calc(142px + env(safe-area-inset-bottom)); width:52px; height:52px; }
+  .modal-content { padding:20px 16px calc(20px + env(safe-area-inset-bottom)); max-height:92svh; }
+  .admin-topbar { align-items:flex-start; flex-direction:column; }
+  .admin-topbar > div, .admin-topbar input { width:100%; }
+  .admin-btn { min-height:42px; }
+  .admin-sidebar { overflow-x:auto; display:flex; gap:8px; padding:10px; }
+  .admin-sidebar button { min-width:max-content; width:auto; }
+  .product-card img { height:150px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
+}
+</style>
+</head>
+<body>
+
+<!-- 食物背景混合层 -->
+<div class="food-bg-layer" aria-hidden="true"></div>
+
+<!-- Toast通知 -->
+<div id="toast" class="toast" role="alert"></div>
+
+<!-- ====== 首页视图 ====== -->
+<div id="view-home" class="view active">
+  <!-- 英雄区 -->
+  <section class="hero-section">
+    <div class="relative z-10 text-center px-6 max-w-2xl mx-auto">
+      <p class="chop-text text-3xl md:text-5xl mb-4">You don chop?</p>
+      <h1 id="hero-title" class="text-white text-3xl md:text-5xl font-extrabold leading-tight mb-4" style="font-family:'Poppins',sans-serif;">
+        GOLIVIA’S PLACE — Fresh Pastries & Snacks Delivered Fast in Makurdi
+      </h1>
+      <p id="hero-subtitle" class="text-white/80 text-base md:text-lg mb-8 font-light">
+        Same-day delivery. Made fresh daily. Your favorite treats at your door.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+        <button class="btn-brand text-lg" onclick="navigateTo('menu')">
+          <i class="fas fa-utensils"></i> Order Now
+        </button>
+        <button class="btn-outline" onclick="navigateTo('menu')">
+          <i class="fas fa-list"></i> View Menu
+        </button>
+      </div>
+      <div class="flex flex-wrap justify-center gap-4 text-white/70 text-xs font-medium">
+        <span><i class="fas fa-leaf mr-1 text-green-400"></i> Fresh Daily</span>
+        <span><i class="fas fa-bolt mr-1 text-yellow-400"></i> Fast Delivery</span>
+        <span><i class="fas fa-shield-alt mr-1 text-blue-400"></i> Secure Payment</span>
+      </div>
+      <div id="status-banner" class="mt-6 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white/90 hidden"></div>
+    </div>
+  </section>
+
+  <!-- 折扣横幅 -->
+  <section class="px-4 -mt-10 relative z-10 max-w-lg mx-auto mb-8">
+    <div class="promo-banner">
+      <p class="font-extrabold text-lg mb-1">Free Delivery!</p>
+      <p class="text-sm text-white/90">On all orders above ₦10,000. Use code <strong>FREEDELIVERY</strong></p>
+    </div>
+  </section>
+
+  <!-- 今日特惠 -->
+  <section class="px-4 max-w-5xl mx-auto mb-10">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-xl font-extrabold">Today's Specials</h2>
+      <button class="text-brand font-semibold text-sm" onclick="navigateTo('menu')">See All <i class="fas fa-arrow-right text-xs"></i></button>
+    </div>
+    <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory" style="scrollbar-width:none;" id="specials-scroll">
+      <!-- 由JS填充 -->
+    </div>
+  </section>
+
+  <!-- 自定义版块 -->
+  <section class="px-4 max-w-5xl mx-auto mb-10">
+    <div id="custom-sections-grid"></div>
+  </section>
+
+  <!-- 热销推荐 -->
+  <section class="px-4 max-w-5xl mx-auto mb-10">
+    <h2 class="text-xl font-extrabold mb-5">Best Sellers</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="bestsellers-grid">
+      <!-- 由JS填充 -->
+    </div>
+  </section>
+
+  <!-- 信任指标 -->
+  <section class="px-4 max-w-5xl mx-auto mb-10">
+    <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+      <p class="text-3xl font-extrabold text-brand mb-1" id="order-counter">Fresh daily</p>
+      <p class="text-muted text-sm font-medium">Made to order in Makurdi</p>
+      <div class="w-16 h-1 bg-orange mx-auto rounded-full mt-3 mb-4"></div>
+      <p class="text-sm text-muted"><i class="fas fa-map-marker-alt text-brand mr-1"></i> Freshly made daily in Makurdi, Benue State</p>
+    </div>
+  </section>
+
+  <!-- 评价 -->
+  <section class="px-4 max-w-5xl mx-auto mb-10">
+    <h2 class="text-xl font-extrabold mb-5">What Our Customers Say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="testimonials-grid">
+      <!-- 由JS填充 -->
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="px-4 max-w-2xl mx-auto mb-10">
+    <h2 class="text-xl font-extrabold mb-5">Frequently Asked Questions</h2>
+    <div id="faq-list">
+      <!-- 由JS填充 -->
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section class="px-4 max-w-2xl mx-auto mb-10 text-center">
+    <h2 class="text-xl font-extrabold mb-3">Need Help?</h2>
+    <p class="text-muted text-sm mb-5">Chat with us directly on WhatsApp for fast support.</p>
+    <a href="https://wa.me/23409043474647" target="_blank" class="btn-brand inline-flex">
+      <i class="fab fa-whatsapp text-lg"></i> Chat on WhatsApp
+    </a>
+    <div class="flex flex-col items-center gap-1 mt-4 text-xs text-muted">
+      <span id="contact-email"><i class="fas fa-envelope mr-1"></i> goliviaresources2010@gmail.com</span>
+      <span id="contact-phone"><i class="fas fa-phone mr-1"></i> 09043474647</span>
+      <span id="contact-address"><i class="fas fa-map-marker-alt mr-1"></i> Makurdi, Benue State, Nigeria</span>
+    </div>
+  </section>
+</div>
+
+<!-- ====== 菜单视图 ====== -->
+<div id="view-menu" class="view">
+  <div class="sticky top-0 z-50 bg-cream/95 backdrop-blur-md px-4 pt-4 pb-3" style="border-bottom:1px solid #eee;">
+    <h1 class="text-xl font-extrabold mb-3">Our Menu</h1>
+    <div class="search-bar mb-3">
+      <i class="fas fa-search"></i>
+      <input type="text" id="menu-search" placeholder="Search for pastries, snacks..." oninput="filterMenu()" aria-label="Search menu">
+    </div>
+    <div class="flex gap-2 overflow-x-auto pb-2" style="scrollbar-width:none;" id="cat-filters">
+      <!-- 由JS填充 -->
+    </div>
+  </div>
+  <div class="px-4 max-w-5xl mx-auto mt-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="menu-grid">
+      <!-- 由JS填充 -->
+    </div>
+    <p id="no-results" class="hidden text-center text-muted py-12 text-sm">No items found. Try a different search.</p>
+  </div>
+</div>
+
+<!-- ====== 购物车视图 ====== -->
+<div id="view-cart" class="view">
+  <div class="px-4 max-w-lg mx-auto pt-4">
+    <div class="flex items-center justify-between mb-5">
+      <h1 class="text-xl font-extrabold">Your Cart</h1>
+      <button class="text-sm text-brand font-semibold" onclick="sendCartToWhatsApp()">
+        <i class="fab fa-whatsapp"></i> Send via WhatsApp
+      </button>
+    </div>
+    <div id="cart-items">
+      <!-- 由JS填充 -->
+    </div>
+    <div id="cart-empty" class="hidden text-center py-16">
+      <i class="fas fa-shopping-bag text-5xl text-gray-200 mb-4"></i>
+      <p class="text-muted font-medium">Your cart is empty</p>
+      <button class="btn-brand btn-sm mt-4" onclick="navigateTo('menu')">Browse Menu</button>
+    </div>
+
+    <!-- 促销码 -->
+    <div id="cart-promo" class="mt-4 bg-white rounded-2xl p-4 shadow-sm">
+      <label class="text-sm font-semibold block mb-2">Promo Code</label>
+      <div class="flex gap-2">
+        <input type="text" id="promo-input" placeholder="Enter code" class="flex-1 border-2 border-gray-200 rounded-10 px-3 py-2 text-sm outline-none focus:border-brand" style="border-radius:10px;">
+        <button class="btn-brand btn-sm" onclick="applyPromo()">Apply</button>
+      </div>
+      <p id="promo-msg" class="text-xs mt-2 font-medium hidden"></p>
+    </div>
+
+    <!-- 订单摘要 -->
+    <div id="cart-summary" class="mt-4 bg-white rounded-2xl p-5 shadow-sm">
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-muted">Subtotal</span><span id="sum-subtotal" class="font-semibold">₦0</span></div>
+        <div class="flex justify-between"><span class="text-muted">Delivery Fee</span><span id="sum-delivery" class="font-semibold">₦0</span></div>
+        <div id="sum-discount-row" class="flex justify-between hidden"><span class="text-green font-medium">Discount</span><span id="sum-discount" class="font-semibold text-green">-₦0</span></div>
+        <hr class="border-gray-100">
+        <div class="flex justify-between text-lg"><span class="font-bold">Total</span><span id="sum-total" class="font-extrabold text-brand">₦0</span></div>
+      </div>
+    </div>
+
+    <!-- 结账表单 -->
+    <div id="checkout-form" class="mt-4 bg-white rounded-2xl p-5 shadow-sm mb-6">
+      <h2 class="font-bold text-lg mb-4">Checkout</h2>
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-semibold text-muted block mb-1">Full Name</label>
+          <input type="text" id="co-name" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand" placeholder="Your full name" required>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-muted block mb-1">Phone Number</label>
+          <input type="tel" id="co-phone" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand" placeholder="080xxxxxxxx" required>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-muted block mb-1">Delivery Option</label>
+          <div class="flex gap-3">
+            <label class="flex-1 flex items-center gap-2 border-2 border-gray-200 rounded-xl px-4 py-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-red-50 transition-all">
+              <input type="radio" name="delivery-opt" value="delivery" checked class="accent-brand" onchange="toggleDeliveryAddress(true)">
+              <span class="text-sm font-medium">Delivery</span>
+            </label>
+            <label class="flex-1 flex items-center gap-2 border-2 border-gray-200 rounded-xl px-4 py-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-red-50 transition-all">
+              <input type="radio" name="delivery-opt" value="pickup" class="accent-brand" onchange="toggleDeliveryAddress(false)">
+              <span class="text-sm font-medium">Pickup</span>
+            </label>
+          </div>
+        </div>
+        <div id="delivery-address-section">
+          <label class="text-xs font-semibold text-muted block mb-1">Delivery Area in Makurdi</label>
+          <select id="co-area" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand bg-white" onchange="updateDeliveryFee()">
+            <option value="">Select your area</option>
+          </select>
+          <label class="text-xs font-semibold text-muted block mb-1 mt-3">Exact Address / Landmark</label>
+          <input type="text" id="co-address" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand" placeholder="House number, street name, landmark">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-muted block mb-1">Payment Method</label>
+          <div class="flex items-center gap-3 border-2 border-brand rounded-xl px-4 py-3 bg-red-50">
+            <i class="fas fa-university text-blue-500"></i>
+            <span class="text-sm font-semibold">Bank Transfer</span>
+          </div>
+        </div>
+        <div id="bank-details" class="bg-green-light rounded-xl p-4 text-sm">
+          <p class="font-bold text-green mb-2">Bank Transfer Details:</p>
+          <p class="text-muted">Bank: <strong class="text-dark">Moniepoint MFB</strong></p>
+          <p class="text-muted">Account: <button type="button" class="font-semibold text-dark underline decoration-dashed" onclick="copyBankAccount()" aria-label="Copy account number">8284079009</button></p>
+          <p class="text-muted">Name: <strong class="text-dark">GOLIVIA’S PLACE</strong></p>
+          <p class="text-xs text-muted mt-2">Send proof of payment via WhatsApp after placing order.</p>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-muted block mb-1">Order Notes (Optional)</label>
+          <textarea id="co-notes" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand resize-none" rows="2" placeholder="Any special requests..."></textarea>
+        </div>
+      </div>
+      <button class="btn-brand btn-full mt-5 text-lg py-4" onclick="placeOrder()">
+        <i class="fas fa-lock"></i> Place Order
+      </button>
+      <p class="text-center text-xs text-muted mt-3"><i class="fas fa-shield-alt text-green mr-1"></i> Secure Payment Guaranteed</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 订单确认视图 ====== -->
+<div id="view-order" class="view">
+  <div class="px-4 max-w-lg mx-auto pt-4" id="order-confirm-content">
+    <!-- 由JS填充 -->
+  </div>
+</div>
+
+<!-- ====== 管理员视图 ====== -->
+<div id="view-admin" class="view">
+  <div class="px-4 max-w-5xl mx-auto pt-4" id="admin-content">
+    <!-- 由JS填充 -->
+  </div>
+</div>
+
+<!-- ====== 产品详情模态框 ====== -->
+<div id="product-modal" class="modal-overlay" onclick="if(event.target===this)closeProductModal()">
+  <div class="modal-content" id="product-modal-body">
+    <!-- 由JS填充 -->
+  </div>
+</div>
+
+<!-- 置顶购物车条 -->
+<div class="sticky-cart" id="sticky-cart" onclick="navigateTo('cart')">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+      <i class="fas fa-shopping-bag text-lg"></i>
+    </div>
+    <div>
+      <p class="font-bold text-sm" id="sc-count">0 items</p>
+      <p class="text-xs text-white/70" id="sc-total">₦0</p>
+    </div>
+  </div>
+  <div class="flex items-center gap-2 font-bold text-sm">
+    View Cart <i class="fas fa-arrow-right"></i>
+  </div>
+</div>
+
+<!-- WhatsApp浮动按钮 -->
+<a href="https://wa.me/23409043474647" target="_blank" class="wa-float" aria-label="Chat on WhatsApp">
+  <i class="fab fa-whatsapp text-white text-2xl"></i>
+</a>
+
+<!-- 底部导航 -->
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button class="active" onclick="navigateTo('home')" data-nav="home" aria-label="Home">
+    <i class="fas fa-home"></i><span>Home</span>
+  </button>
+  <button onclick="navigateTo('menu')" data-nav="menu" aria-label="Menu">
+    <i class="fas fa-utensils"></i><span>Menu</span>
+  </button>
+  <button onclick="navigateTo('cart')" data-nav="cart" aria-label="Cart" style="position:relative;">
+    <i class="fas fa-shopping-bag"></i><span>Cart</span>
+    <span class="cart-badge" id="nav-cart-badge" style="display:none;">0</span>
+  </button>
+  <button onclick="navigateTo('order')" data-nav="order" aria-label="Orders">
+    <i class="fas fa-receipt"></i><span>Orders</span>
+  </button>
+  <button onclick="navigateTo('admin')" data-nav="admin" aria-label="Admin" style="color: #E53935;">
+    <i class="fas fa-lock"></i><span>Admin</span>
+  </button>
+</nav>
+
+<script>
+// ========================================
+// 数据定义
+// ========================================
+let PRODUCTS = [
+  {
+    id:'meat-pie', name:'Meat Pie', price:1000, category:'pastries',
+    image:'Meat Pie.jpg',
+    desc:'Golden, flaky pastry filled with seasoned minced meat and potatoes.',
+    ingredients:'Flour, minced beef, potatoes, onions, spices, vegetable oil.',
+    allergens:'Contains wheat (gluten). May contain traces of eggs.',
+    bestSeller:true, special:true
+  },
+  {
+    id:'doughnut', name:'Doughnut', price:1000, category:'pastries',
+    image:'Doughnut.jpg',
+    desc:'Soft, fluffy doughnut glazed to sweet perfection.',
+    ingredients:'Flour, sugar, yeast, eggs, butter, vegetable oil, glaze.',
+    allergens:'Contains wheat (gluten), eggs, dairy.',
+    bestSeller:true, special:false
+  },
+  {
+    id:'chin-chin', name:'Chin Chin', price:1000, category:'snacks',
+    image:'Chin Chin.jpg',
+    desc:'Crunchy, golden fried snack with a hint of nutmeg.',
+    ingredients:'Flour, sugar, butter, nutmeg, eggs, vegetable oil.',
+    allergens:'Contains wheat (gluten), eggs, dairy.',
+    bestSeller:false, special:false
+  },
+  {
+    id:'puff-puff', name:'Puff Puff', price:1000, category:'snacks',
+    image:'Puff Puff.jpg',
+    desc:'5 pieces of soft, airy fried dough balls — classic Nigerian street snack.',
+    ingredients:'Flour, sugar, yeast, water, vegetable oil, nutmeg.',
+    allergens:'Contains wheat (gluten).',
+    bestSeller:true, special:true, unit:'5 pieces'
+  },
+  {
+    id:'samosa', name:'Samosa', price:1500, category:'snacks',
+    image:'Samosa.jpg',
+    desc:'5 pieces of crispy triangular pastry filled with spiced vegetables.',
+    ingredients:'Flour, potatoes, peas, carrots, onions, curry spice, vegetable oil.',
+    allergens:'Contains wheat (gluten).',
+    bestSeller:false, special:false, unit:'5 pieces'
+  },
+  {
+    id:'spring-rolls', name:'Spring Rolls', price:1500, category:'snacks',
+    image:'Spring rolls.jpg',
+    desc:'5 pieces of crispy rolls with vegetable filling.',
+    ingredients:'Spring roll wrappers, cabbage, carrots, green beans, onions, soy sauce.',
+    allergens:'Contains wheat (gluten), soy.',
+    bestSeller:false, special:true, unit:'5 pieces'
+  },
+  {
+    id:'bread', name:'Bread', price:1500, category:'bakery',
+    image:'Bread.jpg',
+    desc:'Freshly baked, soft and fluffy loaf — perfect for any meal.',
+    ingredients:'Flour, yeast, sugar, salt, butter, water.',
+    allergens:'Contains wheat (gluten).',
+    bestSeller:true, special:false
+  },
+  {
+    id:'cake-small', name:'Cake (Small)', price:5000, category:'cakes',
+    image:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop',
+    desc:'Small celebration cake — serves 6-8 people.',
+    ingredients:'Flour, sugar, butter, eggs, vanilla, frosting, food colors.',
+    allergens:'Contains wheat (gluten), eggs, dairy.',
+    bestSeller:false, special:false, size:'Small'
+  },
+  {
+    id:'cake-medium', name:'Cake (Medium)', price:10000, category:'cakes',
+    image:'Medium cake.jpeg',
+    desc:'Medium celebration cake — serves 12-16 people.',
+    ingredients:'Flour, sugar, butter, eggs, vanilla, frosting, food colors.',
+    allergens:'Contains wheat (gluten), eggs, dairy.',
+    bestSeller:false, special:false, size:'Medium'
+  },
+  {
+    id:'cake-large', name:'Cake (Large)', price:15000, category:'cakes',
+    image:'Big cake.jpeg',
+    desc:'Large celebration cake — serves 20-30 people.',
+    ingredients:'Flour, sugar, butter, eggs, vanilla, frosting, food colors.',
+    allergens:'Contains wheat (gluten), eggs, dairy.',
+    bestSeller:false, special:false, size:'Large'
+  },
+  {
+    id:'abacha', name:'Abacha', price:500, category:'local-dishes',
+    image:'Abacha.jpeg',
+    desc:'Delicious African salad made with shredded cassava.',
+    ingredients:'Cassava, palm oil, onions, garden eggs, spices.',
+    allergens:'None.',
+    bestSeller:false, special:false, unit:'per plate'
+  },
+  {
+    id:'smoothie', name:'Smoothie', price:1500, category:'drinks',
+    image:'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=400&fit=crop',
+    desc:'Fresh, creamy fruit smoothie.',
+    ingredients:'Fresh fruits, yogurt, ice.',
+    allergens:'Contains dairy.',
+    bestSeller:false, special:false
+  },
+  {
+    id:'coke', name:'Coke', price:500, category:'drinks',
+    image:'Coke.jpeg',
+    desc:'Classic Coca-Cola.',
+    ingredients:'Carbonated water, sugar, caffeine, flavorings.',
+    allergens:'None.',
+    bestSeller:false, special:false, unit:'50cl'
+  },
+  {
+    id:'fanta', name:'Fanta', price:500, category:'drinks',
+    image:'Fanta.jpeg',
+    desc:'Refreshing orange soda.',
+    ingredients:'Carbonated water, sugar, orange flavorings.',
+    allergens:'None.',
+    bestSeller:false, special:false, unit:'50cl'
+  },
+  {
+    id:'sprite', name:'Sprite', price:500, category:'drinks',
+    image:'Sprite.jpeg',
+    desc:'Lemon-lime soda.',
+    ingredients:'Carbonated water, sugar, lemon-lime flavorings.',
+    allergens:'None.',
+    bestSeller:false, special:false, unit:'50cl'
+  },
+  {
+    id:'golivias-water', name:'Golivia’s Water', price:300, category:'drinks',
+    image:'Goliviaswater.jpeg',
+    desc:'Pure, clean drinking water.',
+    ingredients:'Purified water.',
+    allergens:'None.',
+    bestSeller:false, special:false
+  }
+];
+
+const DELIVERY_ZONES = [
+  {id:'wadata', name:'Wadata', fee:500, time:'20-30 min'},
+  {id:'low-level', name:'Low Level', fee:500, time:'15-25 min'},
+  {id:'high-level', name:'High Level', fee:600, time:'20-30 min'},
+  {id:'new-garage', name:'New Garage', fee:500, time:'15-25 min'},
+  {id:'old-garage', name:'Old Garage', fee:500, time:'15-20 min'},
+  {id:'ankpa', name:'Ankpa Quarters', fee:600, time:'20-30 min'},
+  {id:'north-bank', name:'North Bank', fee:1000, time:'30-45 min'},
+  {id:'south-bank', name:'South Bank', fee:800, time:'25-35 min'},
+  {id:'gyado', name:'Gyado Villa', fee:700, time:'25-35 min'},
+  {id:'modern-market', name:'Modern Market Area', fee:500, time:'15-25 min'},
+  {id:'kanshio', name:'Kanshio', fee:800, time:'25-35 min'},
+  {id:'kuje', name:'Kuje Area', fee:700, time:'20-30 min'},
+  {id:'hospital-road', name:'Hospital Road', fee:500, time:'15-25 min'},
+  {id:'ati-avi', name:'Ati-Avi / Market Road', fee:500, time:'15-20 min'},
+  {id:'other', name:'Other Location (Specify in address)', fee:1200, time:'40-60 min'}
+];
+
+let PROMO_CODES = {
+  'FIRSTORDER': { type:'percent', value:10, label:'10% off your first order' },
+  'FREEDELIVERY': { type:'free_delivery', value:0, label:'Free delivery' },
+  'CHOP500': { type:'fixed', value:500, label:'₦500 off' }
+};
+
+const TESTIMONIALS = [
+  { name:'Aisha M.', text:'Best meat pie in Makurdi! Always fresh and delivered on time. My family orders every weekend.', rating:5 },
+  { name:'Emeka T.', text:'The doughnuts are heavenly. Soft, sweet, and the delivery is super fast. Highly recommend!', rating:5 },
+  { name:'Blessing O.', text:'Ordered a medium cake for my birthday. It was beautiful and tasted amazing. Everyone loved it!', rating:5 },
+  { name:'John A.', text:'Puff puff and chin chin combo is the perfect snack. Great value for money.', rating:4 },
+  { name:'Fatima B.', text:'Their spring rolls are crispy and filled with fresh vegetables. Will order again!', rating:5 },
+  { name:'David I.', text:'Fast delivery to North Bank. The bread was still warm when it arrived. Excellent service.', rating:4 }
+];
+
+const FAQS = [
+  { q:'How long does delivery take?', a:'Delivery within Makurdi typically takes 15-45 minutes depending on your location. We deliver same-day for all orders placed before 7 PM.' },
+  { q:'What are the delivery fees?', a:'Delivery fees range from ₦500 to ₦1,200 depending on your area. Orders above ₦10,000 get FREE delivery!' },
+  { q:'Can I place an order via WhatsApp?', a:'Yes! Click the WhatsApp button on our website, or use the "Send via WhatsApp" option in your cart. We\'ll confirm and process your order instantly.' },
+  { q:'Do you offer refunds?', a:'If your order is incorrect or damaged, contact us within 30 minutes of delivery via WhatsApp for a replacement or full refund.' },
+  { q:'What allergens should I be aware of?', a:'Most products contain wheat (gluten). Some contain eggs, dairy, and soy. Check individual product listings for specific allergen information.' },
+  { q:'Can I order for events or parties?', a:'Absolutely! We offer party packs and large cakes. Contact us via WhatsApp for bulk orders and custom requests.' }
+];
+
+// ========================================
+// 状态管理
+// ========================================
+let cart = JSON.parse(localStorage.getItem('fb_cart') || '[]');
+let orders = JSON.parse(localStorage.getItem('fb_orders') || '[]');
+let appliedPromo = null;
+let deliveryFee = 0;
+let currentView = 'home';
+let adminAuthenticated = false;
+let adminToken = sessionStorage.getItem('golivia_admin_token') || '';
+let adminSection = 'dashboard';
+let adminSearch = '';
+let adminFilters = { status: 'all', paymentStatus: 'all' };
+let adminNotifications = [];
+let adminProfile = { name: 'Admin', email: 'goliviaresources2010@gmail.com', phone: '+23409043474647' };
+let siteContent = {};
+let settingsData = {};
+let reviewsData = [];
+let promotionsData = [];
+let customersData = [];
+let categoriesData = [];
+let adminDraft = {};
+
+const nativeFetch = window.fetch.bind(window);
+window.fetch = (input, init = {}) => {
+  const url = typeof input === 'string' ? input : input.url;
+  if (!adminToken || !url.includes('/api/admin/') || url.endsWith('/api/admin/login')) return nativeFetch(input, init);
+  const headers = new Headers(init.headers || (typeof input === 'object' ? input.headers : undefined));
+  headers.set('Authorization', `Bearer ${adminToken}`);
+  return nativeFetch(input, { ...init, headers });
+};
+
+// 保存状态
+function saveCart() { localStorage.setItem('fb_cart', JSON.stringify(cart)); }
+function saveOrders() { localStorage.setItem('fb_orders', JSON.stringify(orders)); }
+
+// ========================================
+// 导航系统
+// ========================================
+function navigateTo(view) {
+  // 如果导航到管理员页面且未认证，显示登录
+  if (view === 'admin' && !adminAuthenticated) {
+    showAdminLogin();
+    return;
+  }
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.add('active');
+  currentView = view;
+
+  // 更新底部导航
+  document.querySelectorAll('.bottom-nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.nav === view);
+  });
+
+  // 管理员视图隐藏底部导航
+  document.querySelector('.bottom-nav').style.display = view === 'admin' ? 'none' : '';
+  document.getElementById('sticky-cart').style.display = 'none';
+
+  // 根据视图渲染内容
+  if (view === 'cart') renderCart();
+  if (view === 'order') renderOrderView();
+  if (view === 'admin') renderAdmin();
+  if (view === 'menu') renderMenu();
+
+  window.scrollTo(0, 0);
+  updateStickyCart();
+}
+
+// ========================================
+// Toast通知
+// ========================================
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========================================
+// 首页渲染
+// ========================================
+function renderHome() {
+  const heroTitle = document.getElementById('hero-title');
+  const heroSubtitle = document.getElementById('hero-subtitle');
+  const statusBanner = document.getElementById('status-banner');
+  const emailEl = document.getElementById('contact-email');
+  const phoneEl = document.getElementById('contact-phone');
+  const addressEl = document.getElementById('contact-address');
+  const heroSection = document.querySelector('.hero-section');
+  if (heroTitle) heroTitle.textContent = siteContent.heroText || "GOLIVIA’S PLACE — Fresh Pastries & Snacks Delivered Fast in Makurdi";
+  if (heroSubtitle) heroSubtitle.textContent = siteContent.aboutText || 'Same-day delivery. Made fresh daily. Your favorite treats at your door.';
+  if (heroSection) {
+    const defaultBg = "linear-gradient(135deg, rgba(28,28,28,0.75) 0%, rgba(28,28,28,0.4) 50%, rgba(229,57,53,0.3) 100%), url('Meat Pie.jpg') center/cover no-repeat";
+    heroSection.style.background = siteContent.heroImage ? `linear-gradient(135deg, rgba(28,28,28,0.75) 0%, rgba(28,28,28,0.4) 50%, rgba(229,57,53,0.3) 100%), url('${siteContent.heroImage}') center/cover no-repeat` : defaultBg;
+  }
+  if (emailEl) emailEl.innerHTML = `<i class="fas fa-envelope mr-1"></i> ${settingsData.email || 'goliviaresources2010@gmail.com'}`;
+  if (phoneEl) phoneEl.innerHTML = `<i class="fas fa-phone mr-1"></i> ${settingsData.phone || '09043474647'}`;
+  if (addressEl) addressEl.innerHTML = `<i class="fas fa-map-marker-alt mr-1"></i> ${settingsData.address || 'Makurdi, Benue State, Nigeria'}`;
+  if (statusBanner) {
+    statusBanner.classList.toggle('hidden', settingsData.isOpen !== false);
+    statusBanner.textContent = settingsData.isOpen === false ? 'We are currently closed. Please visit us during business hours.' : 'We are currently open and taking orders.';
+  }
+
+  // 今日特惠横向滚动
+  const specials = PRODUCTS.filter(p => p.special);
+  const scrollEl = document.getElementById('specials-scroll');
+  scrollEl.innerHTML = specials.map(p => `
+    <div class="min-w-[240px] snap-start cursor-pointer" onclick="openProductModal('${p.id}')">
+      <div class="rounded-2xl overflow-hidden bg-white shadow-sm">
+        <div class="relative">
+          <img src="${p.image}" alt="${p.name}" class="w-full h-36 object-cover" loading="lazy">
+          <span class="tag-special">Special</span>
+        </div>
+        <div class="p-3">
+          <h3 class="font-bold text-sm">${p.name}</h3>
+          <p class="text-xs text-muted mt-1 line-clamp-1">${p.desc}</p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="font-extrabold text-brand">₦${p.price.toLocaleString()}${p.unit ? ' ('+p.unit+')' : ''}</span>
+            <button class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white text-xs" onclick="event.stopPropagation();quickAdd('${p.id}')">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // 热销推荐
+  const best = PRODUCTS.filter(p => p.bestSeller);
+  document.getElementById('bestsellers-grid').innerHTML = best.map(p => `
+    <div class="product-card cursor-pointer" onclick="openProductModal('${p.id}')">
+      <div class="img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <span class="tag-best">Best Seller</span>
+      </div>
+      <div class="p-3">
+        <h3 class="font-bold text-sm">${p.name}</h3>
+        <p class="text-brand font-extrabold mt-1">₦${p.price.toLocaleString()}</p>
+        <button class="btn-brand btn-sm btn-full mt-2 text-xs py-2" onclick="event.stopPropagation();quickAdd('${p.id}')">
+          <i class="fas fa-plus"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  const customSections = Array.isArray(siteContent.sections) ? siteContent.sections : [];
+  const customSectionsEl = document.getElementById('custom-sections-grid');
+  if (customSectionsEl) {
+    customSectionsEl.innerHTML = customSections.length ? customSections.map(section => `
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm mb-4 ${section.image ? 'md:grid md:grid-cols-[0.9fr_1.1fr]' : ''}">
+        ${section.image ? `<img src="${section.image}" alt="${section.title || 'Section image'}" class="w-full h-48 object-cover" loading="lazy">` : ''}
+        <div class="p-5">
+          <h3 class="font-extrabold text-lg mb-2">${section.title || 'New Section'}</h3>
+          <p class="text-sm text-muted leading-relaxed">${section.text || ''}</p>
+          ${section.buttonText ? `<a href="${section.buttonLink || '#'}" target="_blank" class="btn-brand btn-sm inline-flex mt-4">${section.buttonText}</a>` : ''}
+        </div>
+      </div>
+    `).join('') : '';
+  }
+
+  // 评价
+  document.getElementById('testimonials-grid').innerHTML = TESTIMONIALS.slice(0,3).map(t => `
+    <div class="bg-white rounded-2xl p-5 shadow-sm">
+      <div class="stars mb-2">${'<i class="fas fa-star"></i>'.repeat(t.rating)}${'<i class="far fa-star"></i>'.repeat(5-t.rating)}</div>
+      <p class="text-sm text-muted leading-relaxed">"${t.text}"</p>
+      <p class="font-bold text-sm mt-3">${t.name}</p>
+    </div>
+  `).join('');
+
+  // FAQ
+  document.getElementById('faq-list').innerHTML = FAQS.map((f,i) => `
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q"><span>${f.q}</span><i class="fas fa-chevron-down text-xs"></i></div>
+      <div class="faq-a pb-4 text-sm">${f.a}</div>
+    </div>
+  `).join('');
+
+  const reviewSource = reviewsData.length ? reviewsData : [];
+  const testimonialsEl = document.getElementById('testimonials-grid');
+  const testimonialSection = testimonialsEl.closest('section');
+  testimonialSection.classList.toggle('hidden', reviewSource.length === 0);
+  testimonialsEl.innerHTML = reviewSource.slice(0, 3).map(review => `
+    <div class="bg-white rounded-2xl p-5 shadow-sm">
+      <div class="stars mb-2">${'<i class="fas fa-star"></i>'.repeat(Math.min(5, Number(review.rating) || 0))}</div>
+      <p class="text-sm text-muted leading-relaxed">"${review.comment}"</p>
+      <p class="font-bold text-sm mt-3">${review.userName}</p>
+    </div>
+  `).join('');
+}
+
+// ========================================
+// 菜单渲染
+// ========================================
+let CATEGORIES = [
+  {id:'all', label:'All'},
+  {id:'pastries', label:'Pastries'},
+  {id:'snacks', label:'Snacks'},
+  {id:'bakery', label:'Bakery'},
+  {id:'cakes', label:'Cakes'},
+  {id:'local-dishes', label:'Local Dishes'},
+  {id:'drinks', label:'Drinks'}
+];
+
+function renderMenu() {
+  // 分类过滤器
+  const filtersEl = document.getElementById('cat-filters');
+  filtersEl.innerHTML = CATEGORIES.map(c => `
+    <button class="cat-btn ${c.id==='all'?'active':''}" onclick="filterByCategory('${c.id}', this)">${c.label}</button>
+  `).join('');
+
+  filterMenu();
+}
+
+function filterByCategory(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('menu-search').value = '';
+  renderMenuGrid(PRODUCTS.filter(p => cat === 'all' || p.category === cat));
+}
+
+function filterMenu() {
+  const q = document.getElementById('menu-search').value.toLowerCase().trim();
+  // 重置分类按钮
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.cat-btn').classList.add('active');
+
+  if (!q) {
+    renderMenuGrid(PRODUCTS);
+    return;
+  }
+  const filtered = PRODUCTS.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    p.desc.toLowerCase().includes(q) ||
+    p.category.toLowerCase().includes(q) ||
+    (p.ingredients && p.ingredients.toLowerCase().includes(q))
+  );
+  renderMenuGrid(filtered);
+}
+
+function renderMenuGrid(items) {
+  const grid = document.getElementById('menu-grid');
+  const noRes = document.getElementById('no-results');
+  if (items.length === 0) {
+    grid.innerHTML = '';
+    noRes.classList.remove('hidden');
+    return;
+  }
+  noRes.classList.add('hidden');
+  grid.innerHTML = items.map(p => `
+    <div class="product-card cursor-pointer" onclick="openProductModal('${p.id}')">
+      <div class="img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        ${p.bestSeller ? '<span class="tag-best">Best Seller</span>' : ''}
+        ${p.special ? '<span class="tag-special">Special</span>' : ''}
+      </div>
+      <div class="p-3">
+        <h3 class="font-bold text-sm leading-tight">${p.name}</h3>
+        <p class="text-xs text-muted mt-1 line-clamp-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${p.desc}</p>
+        <p class="text-brand font-extrabold text-sm mt-2">₦${p.price.toLocaleString()}${p.unit ? ' <span class="text-xs text-muted font-normal">('+p.unit+')</span>' : ''}</p>
+        <button class="btn-brand btn-sm btn-full mt-2 text-xs py-2" onclick="event.stopPropagation();quickAdd('${p.id}')">
+          <i class="fas fa-plus"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========================================
+// 产品详情模态框
+// ========================================
+function openProductModal(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  const inCart = cart.find(c => c.id === id);
+  const qty = inCart ? inCart.qty : 0;
+
+  document.getElementById('product-modal-body').innerHTML = `
+    <div class="relative">
+      <button onclick="closeProductModal()" class="absolute top-2 right-2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center text-white z-10"><i class="fas fa-times"></i></button>
+      <img src="${p.image}" alt="${p.name}" class="w-full h-56 object-cover rounded-xl mb-4">
+      ${p.bestSeller ? '<span class="tag-best" style="position:static;display:inline-block;margin-bottom:12px;">Best Seller</span>' : ''}
+      ${p.special ? '<span class="tag-special" style="position:static;display:inline-block;margin-left:8px;margin-bottom:12px;">Today\'s Special</span>' : ''}
+      <h2 class="text-2xl font-extrabold">${p.name}</h2>
+      <p class="text-brand text-xl font-extrabold mt-1">₦${p.price.toLocaleString()}${p.unit ? ' ('+p.unit+')' : ''}</p>
+      <p class="text-sm text-muted mt-3 leading-relaxed">${p.desc}</p>
+      <div class="mt-4 p-3 bg-cream-dark rounded-xl">
+        <p class="text-xs font-bold mb-1"><i class="fas fa-list-ul text-brand mr-1"></i> Ingredients</p>
+        <p class="text-xs text-muted">${p.ingredients}</p>
+      </div>
+      ${p.allergens ? `
+      <div class="mt-2 p-3 bg-orange-light rounded-xl">
+        <p class="text-xs font-bold text-orange mb-1"><i class="fas fa-exclamation-triangle mr-1"></i> Allergens</p>
+        <p class="text-xs text-muted">${p.allergens}</p>
+      </div>` : ''}
+      <div class="flex items-center gap-4 mt-6">
+        ${qty > 0 ? `
+          <div class="qty-control">
+            <button onclick="updateCartQty('${p.id}',-1)">-</button>
+            <span>${qty}</span>
+            <button onclick="updateCartQty('${p.id}',1)">+</button>
+          </div>
+        ` : ''}
+        <button class="btn-brand btn-full" onclick="quickAdd('${p.id}');closeProductModal();">
+          <i class="fas fa-cart-plus"></i> ${qty > 0 ? 'Add Another' : 'Add to Cart'}
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('product-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductModal() {
+  document.getElementById('product-modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ========================================
+// 购物车逻辑
+// ========================================
+function quickAdd(id) {
+  const existing = cart.find(c => c.id === id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id, qty: 1 });
+  }
+  saveCart();
+  updateStickyCart();
+  showToast('Added to cart!', 'success');
+}
+
+function updateCartQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) {
+    cart = cart.filter(c => c.id !== id);
+  }
+  saveCart();
+  renderCart();
+  updateStickyCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  saveCart();
+  renderCart();
+  updateStickyCart();
+  showToast('Item removed', 'info');
+}
+
+function getCartSubtotal() {
+  return cart.reduce((sum, c) => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    return sum + (p ? p.price * c.qty : 0);
+  }, 0);
+}
+
+function updateStickyCart() {
+  const sc = document.getElementById('sticky-cart');
+  const badge = document.getElementById('nav-cart-badge');
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  const total = getCartSubtotal();
+
+  if (count > 0 && currentView !== 'cart') {
+    sc.classList.add('show');
+    document.getElementById('sc-count').textContent = count + ' item' + (count > 1 ? 's' : '');
+    document.getElementById('sc-total').textContent = '₦' + total.toLocaleString();
+  } else {
+    sc.classList.remove('show');
+  }
+
+  if (count > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = count;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderCart() {
+  const itemsEl = document.getElementById('cart-items');
+  const emptyEl = document.getElementById('cart-empty');
+  const promoEl = document.getElementById('cart-promo');
+  const summaryEl = document.getElementById('cart-summary');
+  const checkoutEl = document.getElementById('checkout-form');
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = '';
+    emptyEl.classList.remove('hidden');
+    promoEl.classList.add('hidden');
+    summaryEl.classList.add('hidden');
+    checkoutEl.classList.add('hidden');
+    return;
+  }
+
+  emptyEl.classList.add('hidden');
+  promoEl.classList.remove('hidden');
+  summaryEl.classList.remove('hidden');
+  checkoutEl.classList.remove('hidden');
+
+  itemsEl.innerHTML = cart.map(c => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    if (!p) return '';
+    return `
+      <div class="bg-white rounded-2xl p-4 shadow-sm mb-3 flex gap-3">
+        <img src="${p.image}" alt="${p.name}" class="w-20 h-20 object-cover rounded-xl flex-shrink-0">
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-sm">${p.name}</h3>
+          <p class="text-brand font-extrabold text-sm mt-1">₦${(p.price * c.qty).toLocaleString()}</p>
+          <div class="flex items-center justify-between mt-2">
+            <div class="qty-control">
+              <button onclick="updateCartQty('${p.id}',-1)">-</button>
+              <span>${c.qty}</span>
+              <button onclick="updateCartQty('${p.id}',1)">+</button>
+            </div>
+            <button onclick="removeFromCart('${p.id}')" class="text-gray-400 hover:text-red-500 transition-colors text-sm">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 填充配送区域下拉
+  const areaSelect = document.getElementById('co-area');
+  if (areaSelect.options.length <= 1) {
+    DELIVERY_ZONES.forEach(z => {
+      const opt = document.createElement('option');
+      opt.value = z.id;
+      opt.textContent = z.name + ' — ₦' + z.fee.toLocaleString() + ' (' + z.time + ')';
+      areaSelect.appendChild(opt);
+    });
+  }
+
+  updateCartSummary();
+}
+
+function updateDeliveryFee() {
+  const areaId = document.getElementById('co-area').value;
+  const zone = DELIVERY_ZONES.find(z => z.id === areaId);
+  deliveryFee = zone ? zone.fee : 0;
+
+  // 免运费促销码
+  if (appliedPromo && appliedPromo.type === 'free_delivery') {
+    deliveryFee = 0;
+  }
+
+  // 满10000免运费
+  const subtotal = getCartSubtotal();
+  if (subtotal >= 10000 && !appliedPromo) {
+    deliveryFee = 0;
+  }
+
+  updateCartSummary();
+}
+
+function toggleDeliveryAddress(show) {
+  document.getElementById('delivery-address-section').style.display = show ? 'block' : 'none';
+  if (!show) deliveryFee = 0;
+  else updateDeliveryFee();
+  updateCartSummary();
+}
+
+function updateCartSummary() {
+  const subtotal = getCartSubtotal();
+  let discount = 0;
+
+  // 计算折扣
+  if (appliedPromo) {
+    if (appliedPromo.type === 'percent') discount = Math.round(subtotal * appliedPromo.value / 100);
+    else if (appliedPromo.type === 'fixed') discount = appliedPromo.value;
+  }
+
+  // 满额免运费
+  const isPickup = document.querySelector('input[name="delivery-opt"]:checked')?.value === 'pickup';
+  const effectiveDelivery = isPickup ? 0 : deliveryFee;
+  const freeDeliveryByAmount = subtotal >= 10000 && !isPickup;
+  const finalDelivery = (freeDeliveryByAmount || (appliedPromo && appliedPromo.type === 'free_delivery')) ? 0 : effectiveDelivery;
+
+  const total = Math.max(0, subtotal - discount + finalDelivery);
+
+  document.getElementById('sum-subtotal').textContent = '₦' + subtotal.toLocaleString();
+  document.getElementById('sum-delivery').textContent = finalDelivery === 0 ? 'FREE' : '₦' + finalDelivery.toLocaleString();
+  document.getElementById('sum-delivery').className = 'font-semibold ' + (finalDelivery === 0 ? 'text-green' : '');
+
+  const discountRow = document.getElementById('sum-discount-row');
+  if (discount > 0) {
+    discountRow.classList.remove('hidden');
+    document.getElementById('sum-discount').textContent = '-₦' + discount.toLocaleString();
+  } else {
+    discountRow.classList.add('hidden');
+  }
+
+  document.getElementById('sum-total').textContent = '₦' + total.toLocaleString();
+}
+
+function applyPromo() {
+  const code = document.getElementById('promo-input').value.trim().toUpperCase();
+  const msgEl = document.getElementById('promo-msg');
+
+  if (!code) { showToast('Enter a promo code', 'error'); return; }
+
+  const promo = PROMO_CODES[code];
+  if (!promo) {
+    msgEl.textContent = 'Invalid promo code';
+    msgEl.className = 'text-xs mt-2 font-medium text-red-500';
+    msgEl.classList.remove('hidden');
+    appliedPromo = null;
+    updateDeliveryFee();
+    return;
+  }
+
+  appliedPromo = promo;
+  msgEl.textContent = 'Applied: ' + promo.label;
+  msgEl.className = 'text-xs mt-2 font-medium text-green';
+  msgEl.classList.remove('hidden');
+  showToast('Promo code applied!', 'success');
+  updateDeliveryFee();
+}
+
+// ========================================
+// 下单
+// ========================================
+async function placeOrder() {
+  if (settingsData.isOpen === false) {
+    showToast('We are currently closed. Please visit us during business hours.', 'error');
+    return;
+  }
+  if (cart.length === 0) { showToast('Your cart is empty!', 'error'); return; }
+
+  const name = document.getElementById('co-name').value.trim();
+  const phone = document.getElementById('co-phone').value.trim();
+  const deliveryOpt = document.querySelector('input[name="delivery-opt"]:checked').value;
+  const area = document.getElementById('co-area').value;
+  const address = document.getElementById('co-address').value.trim();
+  const payment = 'bank-transfer';
+  const notes = document.getElementById('co-notes').value.trim();
+
+  if (!name) { showToast('Please enter your name', 'error'); return; }
+  if (!phone || phone.length < 10) { showToast('Please enter a valid phone number', 'error'); return; }
+  if (deliveryOpt === 'delivery' && !area) { showToast('Please select your delivery area', 'error'); return; }
+  if (deliveryOpt === 'delivery' && !address) { showToast('Please enter your exact address', 'error'); return; }
+
+  const subtotal = getCartSubtotal();
+  let discount = 0;
+  if (appliedPromo) {
+    if (appliedPromo.type === 'percent') discount = Math.round(subtotal * appliedPromo.value / 100);
+    else if (appliedPromo.type === 'fixed') discount = appliedPromo.value;
+  }
+  const isPickup = deliveryOpt === 'pickup';
+  const zone = DELIVERY_ZONES.find(z => z.id === area);
+  let finalDelivery = isPickup ? 0 : (zone ? zone.fee : 0);
+  if (subtotal >= 10000 || (appliedPromo && appliedPromo.type === 'free_delivery')) finalDelivery = 0;
+  const total = Math.max(0, subtotal - discount + finalDelivery);
+
+  const orderId = 'FB-' + Date.now().toString(36).toUpperCase();
+  const order = {
+    id: orderId,
+    orderNumber: orderId,
+    items: cart.map(c => {
+      const p = PRODUCTS.find(x => x.id === c.id);
+      return { id: c.id, name: p ? p.name : c.id, price: p ? p.price : 0, qty: c.qty };
+    }),
+    customer: { name, phone, address: deliveryOpt === 'delivery' ? address : 'Pickup', area: deliveryOpt === 'delivery' ? (zone ? zone.name : area) : 'Pickup' },
+    delivery: { type: deliveryOpt, fee: finalDelivery, time: zone ? zone.time : 'N/A' },
+    payment,
+    promo: appliedPromo ? document.getElementById('promo-input').value.trim().toUpperCase() : null,
+    subtotal, discount, total,
+    notes,
+    status: 'NEW',
+    paymentStatus: 'PENDING',
+    timestamp: new Date().toISOString()
+  };
+
+  orders.push(order);
+  saveOrders();
+  try {
+    const res = await fetch('/api/admin/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    });
+    if (!res.ok) throw new Error('Could not sync order');
+    const saved = await res.json();
+    if (saved.order) {
+      orders[orders.length - 1] = saved.order;
+      saveOrders();
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+
+  cart = [];
+  appliedPromo = null;
+  saveCart();
+  updateStickyCart();
+  sendOwnerNotification(order);
+  const confirmedOrder = orders[orders.length - 1] || order;
+  const waLink = `https://wa.me/23409043474647?text=${encodeURIComponent('Hi, I just placed order ' + confirmedOrder.id + '. My name is ' + confirmedOrder.customer.name + '. Please share the receipt and order details.')}`;
+  showToast('Please share your receipt and order details on WhatsApp.', 'info');
+  setTimeout(() => {
+    window.location.href = waLink;
+  }, 800);
+  showOrderConfirmation(confirmedOrder);
+  navigateTo('order');
+}
+
+function copyBankAccount() {
+  const text = '8284079009';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast('Account number copied', 'success'));
+    return;
+  }
+  const temp = document.createElement('textarea');
+  temp.value = text;
+  temp.setAttribute('readonly', '');
+  temp.style.position = 'fixed';
+  temp.style.left = '-9999px';
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand('copy');
+  document.body.removeChild(temp);
+  showToast('Account number copied', 'success');
+}
+
+function showOrderConfirmation(order) {
+  const el = document.getElementById('order-confirm-content');
+  el.innerHTML = `
+    <div class="text-center py-6">
+      <div class="w-20 h-20 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check-circle text-4xl text-green"></i>
+      </div>
+      <h1 class="text-2xl font-extrabold mb-2">Order Placed!</h1>
+      <p class="text-muted text-sm mb-1">Order ID: <strong>${order.id}</strong></p>
+      <p class="text-muted text-sm">We’re preparing your order now.</p>
+    </div>
+
+    <!-- 订单状态跟踪 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+      <h3 class="font-bold mb-4">Order Status</h3>
+      <div id="status-tracker-${order.id}">
+        ${renderStatusTracker(order.status)}
+      </div>
+      <p class="text-xs text-muted mt-3" id="est-time-${order.id}">
+        ${order.delivery.type === 'pickup' ? 'Ready for pickup in 20-30 min' : 'Estimated delivery: ' + order.delivery.time}
+      </p>
+    </div>
+
+    <!-- 订单详情 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+      <h3 class="font-bold mb-3">Order Details</h3>
+      <div class="space-y-2 text-sm">
+        ${order.items.map(i => `
+          <div class="flex justify-between">
+            <span>${i.name} x${i.qty}</span>
+            <span class="font-semibold">₦${(i.price * i.qty).toLocaleString()}</span>
+          </div>
+        `).join('')}
+        <hr class="border-gray-100">
+        <div class="flex justify-between text-muted"><span>Subtotal</span><span>₦${order.subtotal.toLocaleString()}</span></div>
+        <div class="flex justify-between text-muted"><span>Delivery</span><span>${order.delivery.fee === 0 ? 'FREE' : '₦'+order.delivery.fee.toLocaleString()}</span></div>
+        ${order.discount > 0 ? `<div class="flex justify-between text-green"><span>Discount</span><span>-₦${order.discount.toLocaleString()}</span></div>` : ''}
+        <hr class="border-gray-100">
+        <div class="flex justify-between font-extrabold text-lg"><span>Total</span><span class="text-brand">₦${order.total.toLocaleString()}</span></div>
+      </div>
+    </div>
+
+    <!-- 配送信息 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+      <h3 class="font-bold mb-3">${order.delivery.type === 'pickup' ? 'Pickup Info' : 'Delivery Info'}</h3>
+      <div class="text-sm text-muted space-y-1">
+        <p><strong class="text-dark">Name:</strong> ${order.customer.name}</p>
+        <p><strong class="text-dark">Phone:</strong> ${order.customer.phone}</p>
+        ${order.delivery.type === 'delivery' ? `
+          <p><strong class="text-dark">Area:</strong> ${order.customer.area}</p>
+          <p><strong class="text-dark">Address:</strong> ${order.customer.address}</p>
+        ` : '<p><strong class="text-dark">Location:</strong> Pickup from our kitchen in Makurdi</p>'}
+        <p><strong class="text-dark">Payment:</strong> Bank Transfer</p>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mb-8">
+      <button class="btn-brand btn-full" onclick="navigateTo('home')">
+        <i class="fas fa-home"></i> Back to Home
+      </button>
+      <a href="https://wa.me/23409043474647?text=${encodeURIComponent('Hi, I just placed order ' + order.id + '. My name is ' + order.customer.name + '. Please share the receipt and order details.')}" target="_blank"
+         class="btn-outline btn-full" style="border-color:#25D366;color:#25D366;">
+        <i class="fab fa-whatsapp"></i> Track Order
+      </a>
+    </div>
+  `;
+}
+
+function normalizeStatus(status) {
+  const value = (status || '').toLowerCase();
+  if (['new','received','confirmed'].includes(value)) return 'received';
+  if (['preparing'].includes(value)) return 'preparing';
+  if (['ready','pickup_ready','out_for_delivery'].includes(value)) return 'out_for_delivery';
+  if (['delivered','completed'].includes(value)) return 'delivered';
+  if (['cancelled'].includes(value)) return 'cancelled';
+  return value || 'received';
+}
+
+function formatStatusLabel(status) {
+  return (status || 'NEW').toString().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+function renderStatusTracker(status) {
+  const normalized = normalizeStatus(status);
+  const steps = [
+    { key:'received', label:'Order Received' },
+    { key:'preparing', label:'Preparing' },
+    { key:'out_for_delivery', label: normalized === 'out_for_delivery' ? 'Ready / Out for Delivery' : 'Out for Delivery' },
+    { key:'delivered', label:'Delivered' }
+  ];
+  const statusOrder = ['received','preparing','out_for_delivery','delivered'];
+  const currentIdx = statusOrder.indexOf(normalized);
+  const effectiveIdx = normalized === 'cancelled' ? -1 : currentIdx;
+
+  return steps.map((s, i) => {
+    const done = i < Math.floor(effectiveIdx);
+    const current = (status === 'pickup_ready' && i === 2) || (i === effectiveIdx);
+    return `
+      <div class="status-step">
+        <div class="status-dot ${done ? 'done' : ''} ${current ? 'current' : ''}"></div>
+        <span class="text-sm ${done || current ? 'font-semibold text-dark' : 'text-muted'}">${s.label}</span>
+      </div>
+      ${i < steps.length - 1 ? `<div class="status-line ${i < Math.floor(effectiveIdx) ? 'done' : ''}"></div>` : ''}
+    `;
+  }).join('');
+}
+
+// ========================================
+// 发送店主WhatsApp通知
+// ========================================
+function sendOwnerNotification(order) {
+  let msg = `NEW ORDER: ${order.id}\n\n`;
+  msg += `Customer: ${order.customer.name}\n`;
+  msg += `Phone: ${order.customer.phone}\n`;
+  if (order.delivery.type === 'delivery') {
+    msg += `Area: ${order.customer.area}\n`;
+    msg += `Address: ${order.customer.address}\n`;
+  } else {
+    msg += `Type: PICKUP\n`;
+  }
+  msg += `\nItems:\n`;
+  order.items.forEach(i => { msg += `  ${i.name} x${i.qty} = ₦${(i.price*i.qty).toLocaleString()}\n`; });
+  msg += `\nSubtotal: ₦${order.subtotal.toLocaleString()}\n`;
+  msg += `Delivery: ${order.delivery.fee === 0 ? 'FREE' : '₦'+order.delivery.fee.toLocaleString()}\n`;
+  if (order.discount > 0) msg += `Discount: -₦${order.discount.toLocaleString()}\n`;
+  msg += `TOTAL: ₦${order.total.toLocaleString()}\n`;
+  msg += 'Payment: Bank Transfer\n';
+  if (order.notes) msg += `Notes: ${order.notes}\n`;
+  msg += `\nTime: ${new Date().toLocaleString()}`;
+
+  // 打开WhatsApp链接（静默）
+  const url = `https://wa.me/23409043474647?text=${encodeURIComponent(msg)}`;
+  // 创建隐藏的iframe来触发（不离开当前页面）
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = url;
+  document.body.appendChild(iframe);
+  setTimeout(() => iframe.remove(), 3000);
+
+  // 同时尝试mailto作为备用通知
+  const mailSubject = `New Order: ${order.id}`;
+  const mailBody = msg.replace(/\n/g, '%0A');
+  const mailLink = `mailto:goliviaresources2010@gmail.com?subject=${encodeURIComponent(mailSubject)}&body=${mailBody}`;
+  const mailIframe = document.createElement('iframe');
+  mailIframe.style.display = 'none';
+  mailIframe.src = mailLink;
+  document.body.appendChild(mailIframe);
+  setTimeout(() => mailIframe.remove(), 3000);
+}
+
+// ========================================
+// WhatsApp发送购物车
+// ========================================
+function sendCartToWhatsApp() {
+  if (cart.length === 0) { showToast('Your cart is empty!', 'error'); return; }
+
+  let msg = "Hi, I'd like to order:\n\n";
+  let total = 0;
+  cart.forEach(c => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    if (p) {
+      const lineTotal = p.price * c.qty;
+      msg += `${p.name} x${c.qty} = ₦${lineTotal.toLocaleString()}\n`;
+      total += lineTotal;
+    }
+  });
+  msg += `\nTotal: ₦${total.toLocaleString()}`;
+  msg += `\n\nPlease confirm availability and delivery time.`;
+
+  window.open(`https://wa.me/23409043474647?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ========================================
+// 订单视图（用户查看历史订单）
+// ========================================
+function renderOrderView() {
+  const el = document.getElementById('order-confirm-content');
+  // 找最近的订单
+  const recent = [...orders].reverse().slice(0, 5);
+
+  if (recent.length === 0) {
+    el.innerHTML = `
+      <div class="text-center py-16">
+        <i class="fas fa-receipt text-5xl text-gray-200 mb-4"></i>
+        <p class="text-muted font-medium">No orders yet</p>
+        <button class="btn-brand btn-sm mt-4" onclick="navigateTo('menu')">Start Ordering</button>
+      </div>
+    `;
+    return;
+  }
+
+  el.innerHTML = `
+    <h1 class="text-xl font-extrabold mb-5">Your Orders</h1>
+    ${recent.map(o => `
+      <div class="bg-white rounded-2xl p-4 shadow-sm mb-3">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-sm">${o.id}</span>
+          <span class="text-xs px-3 py-1 rounded-full font-semibold ${
+            normalizeStatus(o.status) === 'delivered' ? 'bg-green-light text-green' :
+            normalizeStatus(o.status) === 'received' ? 'bg-orange-light text-orange' :
+            'bg-red-50 text-brand'
+          }">${formatStatusLabel(o.status)}</span>
+        </div>
+        <p class="text-xs text-muted">${o.items.map(i => i.name + ' x' + i.qty).join(', ')}</p>
+        <div class="flex items-center justify-between mt-3">
+          <span class="font-extrabold text-brand">₦${o.total.toLocaleString()}</span>
+          <span class="text-xs text-muted">${new Date(o.timestamp).toLocaleDateString()}</span>
+        </div>
+        ${renderStatusTracker(o.status)}
+      </div>
+    `).join('')}
+    <button class="btn-brand btn-full mb-8" onclick="navigateTo('menu')">
+      <i class="fas fa-utensils"></i> Order More
+    </button>
+  `;
+}
+
+// ========================================
+// 管理员登录与仪表板
+// ========================================
+function showAdminLogin() {
+  const el = document.getElementById('admin-content');
+  el.innerHTML = `
+    <div class="max-w-sm mx-auto pt-12 text-center">
+      <div class="w-16 h-16 bg-brand/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-lock text-2xl text-brand"></i>
+      </div>
+      <h1 class="text-xl font-extrabold mb-2">Admin Login</h1>
+      <p class="text-sm text-muted mb-6">Enter admin password to continue</p>
+      <input type="password" id="admin-pass" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand mb-4 text-center tracking-widest" placeholder="Password" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn-brand btn-full" onclick="adminLogin()">Login</button>
+      <button class="text-sm text-muted mt-4 block mx-auto" onclick="navigateTo('home')" style="background:none;border:none;cursor:pointer;">Back to Home</button>
+    </div>
+  `;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-admin').classList.add('active');
+  document.querySelector('.bottom-nav').style.display = 'none';
+  document.getElementById('sticky-cart').classList.remove('show');
+  setTimeout(() => document.getElementById('admin-pass')?.focus(), 100);
+}
+
+async function adminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      adminAuthenticated = true;
+      adminToken = data.token;
+      sessionStorage.setItem('golivia_admin_token', adminToken);
+      await loadAppData();
+      showToast('Welcome, Admin!', 'success');
+      renderAdmin();
+    } else {
+      showToast('Wrong password', 'error');
+    }
+  } catch (err) {
+    showToast('Unable to reach admin service', 'error');
+  }
+}
+
+async function loadAppData() {
+  try {
+    const res = await fetch(adminAuthenticated ? '/api/admin/data' : '/api/storefront');
+    if (!res.ok) throw new Error('Failed');
+    const payload = await res.json();
+    if (payload.products) PRODUCTS = payload.products;
+    if (payload.categories) categoriesData = payload.categories;
+    if (payload.promotions) promotionsData = payload.promotions;
+    if (payload.reviews) reviewsData = payload.reviews;
+    if (payload.settings) settingsData = payload.settings;
+    if (payload.orders) orders = payload.orders;
+    if (payload.customers) customersData = payload.customers;
+    if (payload.siteContent) siteContent = payload.siteContent;
+    if (payload.adminProfile) adminProfile = payload.adminProfile;
+    if (payload.notifications) adminNotifications = payload.notifications;
+    if (payload.categories && payload.categories.length) {
+      CATEGORIES = [{id:'all', label:'All'}].concat(payload.categories.map(c => ({ id: c.id, label: c.name })));
+    }
+    if (payload.promotions) {
+      PROMO_CODES = {};
+      payload.promotions.filter(p => p.active).forEach(p => {
+        PROMO_CODES[p.code] = { type: p.type.toLowerCase(), value: p.value, label: p.name };
+      });
+    }
+    localStorage.setItem('fb_orders', JSON.stringify(orders));
+    localStorage.setItem('fb_products', JSON.stringify(PRODUCTS));
+  } catch (err) {
+    console.warn('Using local fallback data', err);
+  }
+}
+
+function getAdminSectionTitle() {
+  const titles = {
+    dashboard: 'Dashboard',
+    orders: 'Orders',
+    menu: 'Menu',
+    categories: 'Categories',
+    customers: 'Customers',
+    promotions: 'Promotions',
+    reviews: 'Reviews',
+    reports: 'Reports',
+    content: 'Website Content',
+    settings: 'Settings',
+    profile: 'Admin Profile'
+  };
+  return titles[adminSection] || 'Dashboard';
+}
+
+function setAdminSection(section) {
+  adminSection = section;
+  renderAdmin();
+}
+
+function renderAdmin() {
+  const el = document.getElementById('admin-content');
+  if (!adminAuthenticated) {
+    showAdminLogin();
+    return;
+  }
+
+  const totalSales = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+  const todayOrders = orders.filter(order => new Date(order.timestamp || order.createdAt).toDateString() === new Date().toDateString());
+  const pendingOrders = orders.filter(order => (order.status || '').toUpperCase() === 'NEW' || (order.status || '').toUpperCase() === 'CONFIRMED');
+  const lowStock = PRODUCTS.filter(product => product.stock !== undefined && product.stock <= 5);
+  const productCounts = {};
+  orders.forEach(order => (order.items || []).forEach(item => {
+    productCounts[item.name] = (productCounts[item.name] || 0) + (item.qty || 0);
+  }));
+  const popular = Object.entries(productCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const filteredOrders = orders.filter(order => {
+    const search = adminSearch.toLowerCase();
+    const matchesSearch = !search || order.orderNumber?.toLowerCase().includes(search) || order.customer?.name?.toLowerCase().includes(search) || order.customer?.phone?.includes(search);
+    const matchesStatus = adminFilters.status === 'all' || (order.status || '').toUpperCase() === adminFilters.status.toUpperCase();
+    const matchesPayment = adminFilters.paymentStatus === 'all' || (order.paymentStatus || '').toUpperCase() === adminFilters.paymentStatus.toUpperCase();
+    return matchesSearch && matchesStatus && matchesPayment;
+  }).sort((a, b) => new Date(b.timestamp || b.createdAt) - new Date(a.timestamp || a.createdAt));
+
+  el.innerHTML = `
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <div class="mb-4">
+          <h2 class="font-extrabold text-lg">Golivia Admin</h2>
+          <p class="text-sm text-muted">Restaurant management</p>
+        </div>
+        <div class="space-y-1">
+          ${[
+            ['dashboard','Dashboard','fa-chart-line'],
+            ['orders','Orders','fa-receipt'],
+            ['menu','Menu','fa-utensils'],
+            ['categories','Categories','fa-tags'],
+            ['customers','Customers','fa-users'],
+            ['promotions','Promotions','fa-percent'],
+            ['reviews','Reviews','fa-star'],
+            ['reports','Reports','fa-file-alt'],
+            ['content','Website Content','fa-globe'],
+            ['settings','Settings','fa-sliders-h'],
+            ['profile','Admin Profile','fa-user-cog']
+          ].map(([key, label, icon]) => `
+            <button class="${adminSection === key ? 'active' : ''}" onclick="setAdminSection('${key}')">
+              <i class="fas ${icon}"></i>
+              <span>${label}</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="mt-5 border-t pt-4">
+          <button onclick="adminAuthenticated=false;navigateTo('home')">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+      <main class="admin-main">
+        <div class="admin-topbar">
+          <div>
+            <p class="text-sm text-muted">${getAdminSectionTitle()}</p>
+            <h1 class="text-2xl font-extrabold">${getAdminSectionTitle()}</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="search-bar" style="min-width:220px; padding:0 12px;">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search" value="${adminSearch}" oninput="adminSearch=this.value; renderAdmin();" aria-label="Search admin">
+            </div>
+            <button class="btn-brand btn-sm" onclick="renderAdmin()">
+              <i class="fas fa-bell"></i>
+              <span class="admin-badge">${adminNotifications.length}</span>
+            </button>
+          </div>
+        </div>
+        ${renderAdminSectionContent(filteredOrders, pendingOrders, lowStock, popular)}
+      </main>
+    </div>
+  `;
+}
+
+function renderAdminSectionContent(filteredOrders, pendingOrders, lowStock, popular) {
+  switch (adminSection) {
+    case 'orders': return renderAdminOrders(filteredOrders);
+    case 'menu': return renderAdminMenu();
+    case 'categories': return renderAdminCategories();
+    case 'customers': return renderAdminCustomers();
+    case 'promotions': return renderAdminPromotions();
+    case 'reviews': return renderAdminReviews();
+    case 'reports': return renderAdminReports();
+    case 'content': return renderAdminContent();
+    case 'settings': return renderAdminSettings();
+    case 'profile': return renderAdminProfile();
+    default: return renderAdminDashboard(pendingOrders, lowStock, popular);
+  }
+}
+
+function renderAdminDashboard(pendingOrders, lowStock, popular) {
+  const totalSales = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+  const todayOrders = orders.filter(order => new Date(order.timestamp || order.createdAt).toDateString() === new Date().toDateString());
+  const todaySales = todayOrders.reduce((sum, order) => sum + (order.total || 0), 0);
+  const completedOrders = orders.filter(order => (order.status || '').toUpperCase() === 'COMPLETED');
+  const cancelledOrders = orders.filter(order => (order.status || '').toUpperCase() === 'CANCELLED');
+  return `
+    <div class="admin-grid mb-6">
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Orders Today</p><p class="text-2xl font-extrabold mt-1">${todayOrders.length}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Revenue Today</p><p class="text-2xl font-extrabold mt-1">₦${todaySales.toLocaleString()}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Pending Orders</p><p class="text-2xl font-extrabold mt-1">${pendingOrders.length}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Completed Orders</p><p class="text-2xl font-extrabold mt-1">${completedOrders.length}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Cancelled Orders</p><p class="text-2xl font-extrabold mt-1">${cancelledOrders.length}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">New Customers</p><p class="text-2xl font-extrabold mt-1">${customersData.length}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Best Selling Item</p><p class="text-2xl font-extrabold mt-1">${popular[0] ? popular[0][0] : '—'}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Total Revenue</p><p class="text-2xl font-extrabold mt-1">₦${totalSales.toLocaleString()}</p></div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-white rounded-2xl p-5 border">
+        <h3 class="font-bold mb-3">Recent Orders</h3>
+        <div class="space-y-2">
+          ${orders.slice(-5).reverse().map(order => `
+            <div class="flex items-center justify-between border-b py-2 text-sm">
+              <span>${order.orderNumber || order.id}</span>
+              <span class="font-semibold">₦${(order.total || 0).toLocaleString()}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border">
+        <h3 class="font-bold mb-3">Low Stock Alert</h3>
+        <div class="space-y-2">
+          ${lowStock.length ? lowStock.map(item => `<div class="text-sm">${item.name} — ${item.stock || 0} left</div>`).join('') : '<p class="text-sm text-muted">Everything is stocked well.</p>'}
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-5 border">
+      <h3 class="font-bold mb-3">Popular Menu Items</h3>
+      <div class="space-y-2">
+        ${popular.length ? popular.map(([name, qty], index) => `
+          <div class="flex items-center justify-between py-2 border-b text-sm">
+            <span>${index + 1}. ${name}</span>
+            <span class="font-semibold">${qty} sold</span>
+          </div>
+        `).join('') : '<p class="text-sm text-muted">No sales yet.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminOrders(filteredOrders) {
+  return `
+    <div class="flex flex-wrap gap-2 mb-4">
+      <select class="admin-select w-auto" onchange="adminFilters.status=this.value; renderAdmin();">
+        <option value="all" ${adminFilters.status === 'all' ? 'selected' : ''}>All status</option>
+        <option value="NEW" ${adminFilters.status === 'NEW' ? 'selected' : ''}>New</option>
+        <option value="CONFIRMED" ${adminFilters.status === 'CONFIRMED' ? 'selected' : ''}>Confirmed</option>
+        <option value="PREPARING" ${adminFilters.status === 'PREPARING' ? 'selected' : ''}>Preparing</option>
+        <option value="READY" ${adminFilters.status === 'READY' ? 'selected' : ''}>Ready</option>
+        <option value="DELIVERED" ${adminFilters.status === 'DELIVERED' ? 'selected' : ''}>Delivered</option>
+        <option value="COMPLETED" ${adminFilters.status === 'COMPLETED' ? 'selected' : ''}>Completed</option>
+        <option value="CANCELLED" ${adminFilters.status === 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+      </select>
+      <select class="admin-select w-auto" onchange="adminFilters.paymentStatus=this.value; renderAdmin();">
+        <option value="all" ${adminFilters.paymentStatus === 'all' ? 'selected' : ''}>All payment</option>
+        <option value="PAID" ${adminFilters.paymentStatus === 'PAID' ? 'selected' : ''}>Paid</option>
+        <option value="PENDING" ${adminFilters.paymentStatus === 'PENDING' ? 'selected' : ''}>Pending</option>
+        <option value="FAILED" ${adminFilters.paymentStatus === 'FAILED' ? 'selected' : ''}>Failed</option>
+      </select>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Action</th></tr></thead>
+        <tbody>
+          ${filteredOrders.length ? filteredOrders.map(order => `
+            <tr>
+              <td>
+                <div class="font-semibold">${order.orderNumber || order.id}</div>
+                <div class="text-xs text-muted">${new Date(order.timestamp || order.createdAt).toLocaleString()}</div>
+              </td>
+              <td>
+                <div class="font-semibold">${order.customer?.name || 'Guest'}</div>
+                <div class="text-xs text-muted">${order.customer?.phone || '—'}</div>
+              </td>
+              <td><div class="text-sm">${(order.items || []).map(item => `${item.name} x${item.qty}`).join(', ')}</div></td>
+              <td class="font-semibold">₦${(order.total || 0).toLocaleString()}</td>
+              <td><span class="admin-chip ${((order.status || '').toUpperCase() === 'NEW' || (order.status || '').toUpperCase() === 'CONFIRMED' ? 'inactive' : 'active')}">${(order.status || 'NEW').toUpperCase()}</span></td>
+              <td>${(order.paymentStatus || 'PAID').toUpperCase()}</td>
+              <td>
+                <div class="flex flex-wrap gap-2">
+                  <button class="admin-btn secondary" onclick="updateOrderStatus('${order.id}','CONFIRMED')">Confirm</button>
+                  <button class="admin-btn warn" onclick="updateOrderStatus('${order.id}','PREPARING')">Preparing</button>
+                  <button class="admin-btn success" onclick="updateOrderStatus('${order.id}','COMPLETED')">Complete</button>
+                  <button class="admin-btn" onclick="updateOrderStatus('${order.id}','CANCELLED')">Cancel</button>
+                </div>
+              </td>
+            </tr>
+          `).join('') : '<tr><td colspan="7" class="text-center text-muted py-6">No orders matched your filters.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+async function updateOrderStatus(orderId, status) {
+  const order = orders.find(item => item.id === orderId);
+  if (!order) return;
+  order.status = status;
+  order.paymentStatus = order.paymentStatus || 'PAID';
+  saveOrders();
+  try {
+    await fetch(`/api/admin/orders/${order.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+  } catch (err) {
+    console.warn(err);
+  }
+  showToast('Order status updated', 'success');
+  renderAdmin();
+}
+
+function renderAdminMenu() {
+  return `
+    <div class="grid lg:grid-cols-[1.3fr,0.7fr] gap-4">
+      <div class="bg-white rounded-2xl border p-4">
+        <h3 class="font-bold mb-3">Menu Items</h3>
+        <div class="space-y-2">
+          ${PRODUCTS.map(product => `
+            <div class="flex items-center justify-between border-b py-2">
+              <div>
+                <div class="font-semibold">${product.name}</div>
+                <div class="text-xs text-muted">₦${(product.price || 0).toLocaleString()} • ${product.isAvailable ? 'Available' : 'Hidden'}</div>
+              </div>
+              <div class="flex gap-2">
+                <button class="admin-btn secondary" onclick="toggleProductAvailability('${product.id}')">${product.isAvailable ? 'Hide' : 'Show'}</button>
+                <button class="admin-btn" onclick="deleteProduct('${product.id}')">Delete</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl border p-4">
+        <h3 class="font-bold mb-3">Add/Edit Product</h3>
+        <div class="space-y-3">
+          <input id="product-name" class="admin-input" placeholder="Food name">
+          <input id="product-price" class="admin-input" type="number" placeholder="Price">
+          <input id="product-image" class="admin-input" placeholder="Image URL">
+          <input id="product-category" class="admin-input" placeholder="Category">
+          <input id="product-stock" class="admin-input" type="number" placeholder="Stock quantity" value="10">
+          <textarea id="product-desc" class="admin-textarea" rows="3" placeholder="Description"></textarea>
+          <div class="flex gap-2">
+            <button class="admin-btn" onclick="saveProductFromForm()">Save Product</button>
+            <button class="admin-btn secondary" onclick="clearProductForm()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function saveProductFromForm() {
+  const payload = {
+    name: document.getElementById('product-name').value,
+    price: Number(document.getElementById('product-price').value || 0),
+    image: document.getElementById('product-image').value,
+    category: document.getElementById('product-category').value,
+    desc: document.getElementById('product-desc').value,
+    isAvailable: true,
+    bestSeller: false,
+    special: false,
+    stock: Number(document.getElementById('product-stock')?.value || 10)
+  };
+  if (!payload.name) {
+    showToast('Please enter a product name', 'error');
+    return;
+  }
+  const res = await fetch('/api/admin/products', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (res.ok) {
+    PRODUCTS.push(data.product);
+    await loadAppData();
+    showToast('Product saved', 'success');
+    renderAdmin();
+    clearProductForm();
+  } else {
+    showToast(data.error || 'Unable to save product', 'error');
+  }
+}
+
+async function toggleProductAvailability(productId) {
+  const product = PRODUCTS.find(item => item.id === productId);
+  if (!product) return;
+  product.isAvailable = !product.isAvailable;
+  await fetch(`/api/admin/products/${product.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isAvailable: product.isAvailable })
+  });
+  showToast('Availability updated', 'success');
+  renderAdmin();
+}
+
+async function deleteProduct(productId) {
+  const res = await fetch(`/api/admin/products/${productId}`, { method: 'DELETE' });
+  if (res.ok) {
+    PRODUCTS = PRODUCTS.filter(item => item.id !== productId);
+    showToast('Product removed', 'success');
+    renderAdmin();
+  }
+}
+
+function clearProductForm() {
+  ['product-name','product-price','product-image','product-category','product-stock','product-desc'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = id === 'product-stock' ? '10' : '';
+  });
+}
+
+function renderAdminCategories() {
+  return `
+    <div class="grid lg:grid-cols-[1fr,0.6fr] gap-4">
+      <div class="bg-white rounded-2xl border p-4">
+        <h3 class="font-bold mb-3">Categories</h3>
+        <div class="space-y-2">
+          ${(categoriesData.length ? categoriesData : [{name:'Pastries'},{name:'Drinks'}]).map((category, index) => `
+            <div class="flex items-center justify-between border-b py-2">
+              <div>
+                <div class="font-semibold">${category.name}</div>
+                <div class="text-xs text-muted">Sort order ${index + 1}</div>
+              </div>
+              <button class="admin-btn secondary" onclick="deleteCategory('${category.id || category.name}')">Delete</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl border p-4">
+        <h3 class="font-bold mb-3">Add Category</h3>
+        <div class="space-y-3">
+          <input id="category-name" class="admin-input" placeholder="Category name">
+          <button class="admin-btn" onclick="saveCategory()">Save Category</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function saveCategory() {
+  const name = document.getElementById('category-name').value.trim();
+  if (!name) return;
+  const res = await fetch('/api/admin/categories', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name })
+  });
+  const data = await res.json();
+  if (res.ok) {
+    categoriesData.push(data.category);
+    await loadAppData();
+    showToast('Category saved', 'success');
+    renderAdmin();
+  }
+}
+
+async function deleteCategory(categoryId) {
+  const res = await fetch(`/api/admin/categories/${categoryId}`, { method: 'DELETE' });
+  if (res.ok) {
+    categoriesData = categoriesData.filter(item => item.id !== categoryId && item.name !== categoryId);
+    await loadAppData();
+    showToast('Category removed', 'success');
+    renderAdmin();
+  }
+}
+
+function renderAdminCustomers() {
+  return `
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Total Orders</th><th>Spend</th><th>Last Order</th></tr></thead>
+        <tbody>
+          ${(customersData.length ? customersData : orders.map(order => ({ name: order.customer?.name || 'Guest', phone: order.customer?.phone || '—', email: order.customer?.email || '—', totalOrders: 1, totalSpent: order.total || 0, lastOrder: order.timestamp || order.createdAt }))).map(customer => `
+            <tr>
+              <td>${customer.name}</td>
+              <td>${customer.phone}</td>
+              <td>${customer.email || '—'}</td>
+              <td>${customer.totalOrders || 1}</td>
+              <td>₦${(customer.totalSpent || 0).toLocaleString()}</td>
+              <td>${customer.lastOrder ? new Date(customer.lastOrder).toLocaleDateString() : '—'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderAdminPromotions() {
+  return `
+    <div class="grid lg:grid-cols-[1fr,0.7fr] gap-4">
+      <div class="bg-white rounded-2xl border p-4">
+        <h3 class="font-bold mb-3">Active Promotions</h3>
+        <div class="space-y-2">
+          ${(promotionsData.length ? promotionsData : [{ name:'Free Delivery', code:'FREEDELIVERY', value:0, active:true }]).map(promo => `
+            <div class="flex items-center justify-between border-b py-2">
+              <div>
+                <div class="font-semibold">${promo.name}</div>
+                <div class="text-xs text-muted">${promo.code} • ${promo.active ? 'Active' : 'Inactive'}</div>
+              </div>
+              <button class="admin-btn secondary" onclick="togglePromotion('${promo.id || promo.code}')">${promo.active ? 'Deactivate' : 'Activate'}</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl border p-4">
+        <h3 class="font-bold mb-3">Create Promotion</h3>
+        <div class="space-y-3">
+          <input id="promo-name" class="admin-input" placeholder="Promo name">
+          <input id="promo-code" class="admin-input" placeholder="Promo code">
+          <input id="promo-value" class="admin-input" type="number" placeholder="Discount value">
+          <button class="admin-btn" onclick="savePromotion()">Save Promotion</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function savePromotion() {
+  const payload = {
+    name: document.getElementById('promo-name').value,
+    code: document.getElementById('promo-code').value.toUpperCase(),
+    value: Number(document.getElementById('promo-value').value || 0),
+    active: true,
+    type: 'PERCENT'
+  };
+  const res = await fetch('/api/admin/promotions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (res.ok) {
+    promotionsData.push(data.promotion);
+    await loadAppData();
+    showToast('Promotion saved', 'success');
+    renderAdmin();
+  }
+}
+
+async function togglePromotion(promoId) {
+  const item = promotionsData.find(promo => (promo.id || promo.code) === promoId);
+  if (!item) return;
+  item.active = !item.active;
+  await fetch(`/api/admin/promotions/${promoId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ active: item.active })
+  });
+  await loadAppData();
+  showToast('Promotion updated', 'success');
+  renderAdmin();
+}
+
+function renderAdminReviews() {
+  return `
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Customer</th><th>Rating</th><th>Review</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          ${(reviewsData.length ? reviewsData : [{ userName:'Aisha', rating:5, comment:'Great service', isApproved:true }]).map(review => `
+            <tr>
+              <td>${review.userName || 'Guest'}</td>
+              <td>${'★'.repeat(review.rating || 0)}</td>
+              <td>${review.comment || '—'}</td>
+              <td>${review.isApproved ? 'Approved' : 'Hidden'}</td>
+              <td><button class="admin-btn secondary" onclick="toggleReview('${review.id}')">${review.isApproved ? 'Hide' : 'Approve'}</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+async function toggleReview(reviewId) {
+  const review = reviewsData.find(item => item.id === reviewId);
+  if (!review) return;
+  review.isApproved = !review.isApproved;
+  await fetch(`/api/admin/reviews/${reviewId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isApproved: review.isApproved })
+  });
+  await loadAppData();
+  showToast('Review updated', 'success');
+  renderAdmin();
+}
+
+function renderAdminReports() {
+  const reportRows = orders.map(order => ({ date: new Date(order.timestamp || order.createdAt).toLocaleDateString(), total: order.total || 0, status: order.status || 'NEW' }));
+  const totalSales = reportRows.reduce((sum, row) => sum + row.total, 0);
+  const avgOrderValue = reportRows.length ? Math.round(totalSales / reportRows.length) : 0;
+  return `
+    <div class="admin-grid mb-4">
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Daily Sales</p><p class="text-2xl font-extrabold mt-1">₦${totalSales.toLocaleString()}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Average Order Value</p><p class="text-2xl font-extrabold mt-1">₦${avgOrderValue.toLocaleString()}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Cancelled Orders</p><p class="text-2xl font-extrabold mt-1">${orders.filter(order => (order.status || '').toUpperCase() === 'CANCELLED').length}</p></div>
+      <div class="admin-card"><p class="text-muted text-xs uppercase">Best Category</p><p class="text-2xl font-extrabold mt-1">Pastries</p></div>
+    </div>
+    <button class="admin-btn" onclick="exportReports()">Export CSV</button>
+  `;
+}
+
+function exportReports() {
+  const rows = orders.map(order => [order.orderNumber || order.id, order.customer?.name || '', order.total || 0, order.status || 'NEW'].join(','));
+  const csv = ['orderNumber,customer,total,status', ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'golivia-reports.csv';
+  link.click();
+  showToast('Report downloaded', 'success');
+}
+
+function addContentSection() {
+  const sections = Array.isArray(siteContent.sections) ? siteContent.sections : [];
+  sections.push({ title: 'New Section', text: 'Describe this section', image: '', buttonText: '', buttonLink: '#' });
+  siteContent.sections = sections;
+  renderAdmin();
+}
+
+function removeContentSection(index) {
+  const sections = Array.isArray(siteContent.sections) ? siteContent.sections : [];
+  sections.splice(index, 1);
+  siteContent.sections = sections;
+  renderAdmin();
+}
+
+async function handleAdminImageSelection(event, targetId) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const payload = { fileName: file.name, contentType: file.type, data: reader.result.split(',')[1] };
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        const input = document.getElementById(targetId);
+        if (input) input.value = data.url;
+        showToast('Image uploaded', 'success');
+      } else {
+        showToast('Image upload failed', 'error');
+      }
+    } catch (err) {
+      showToast('Image upload failed', 'error');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderAdminContent() {
+  return `
+    <div class="grid lg:grid-cols-[1.2fr,0.8fr] gap-4">
+      <div class="bg-white rounded-2xl border p-4 space-y-3">
+        <h3 class="font-bold mb-3">Website Content</h3>
+        <label class="text-xs font-semibold text-muted block">Hero title</label>
+        <input id="content-hero" class="admin-input" value="${siteContent.heroText || 'Fresh pastries & snacks delivered fast'}" placeholder="Hero text">
+        <label class="text-xs font-semibold text-muted block">Hero description</label>
+        <textarea id="content-about" class="admin-textarea" rows="4" placeholder="About us">${siteContent.aboutText || 'Welcome to Golivia\'s Place.'}</textarea>
+        <label class="text-xs font-semibold text-muted block">Business hours</label>
+        <input id="content-hours" class="admin-input" value="${siteContent.businessHours || 'Mon-Sun 8 AM - 9 PM'}" placeholder="Business hours">
+        <label class="text-xs font-semibold text-muted block">Hero image URL</label>
+        <input id="content-hero-image" class="admin-input" value="${siteContent.heroImage || ''}" placeholder="Hero image URL">
+        <input type="file" accept="image/*" class="admin-input" onchange="handleAdminImageSelection(event, 'content-hero-image')">
+        <div class="flex items-center justify-between mt-2">
+          <h4 class="font-semibold">Homepage sections</h4>
+          <button class="admin-btn secondary" onclick="addContentSection()">Add Section</button>
+        </div>
+        <div class="space-y-3" id="content-sections-list">
+          ${(Array.isArray(siteContent.sections) ? siteContent.sections : []).map((section, index) => `
+            <div class="border rounded-2xl p-3 space-y-2" data-section-role="section-card" data-section-index="${index}">
+              <div class="flex items-center justify-between">
+                <span class="font-semibold">Section ${index + 1}</span>
+                <button class="admin-btn secondary" onclick="removeContentSection(${index})">Remove</button>
+              </div>
+              <input id="section-title-${index}" class="admin-input" value="${section.title || ''}" placeholder="Section title">
+              <textarea id="section-text-${index}" class="admin-textarea" rows="3" placeholder="Section description">${section.text || ''}</textarea>
+              <input id="section-image-${index}" class="admin-input" value="${section.image || ''}" placeholder="Section image URL">
+              <input type="file" accept="image/*" class="admin-input" onchange="handleAdminImageSelection(event, 'section-image-${index}')">
+              <input id="section-button-text-${index}" class="admin-input" value="${section.buttonText || ''}" placeholder="Button text">
+              <input id="section-button-link-${index}" class="admin-input" value="${section.buttonLink || '#'}" placeholder="Button link">
+            </div>
+          `).join('')}
+        </div>
+        <button class="admin-btn" onclick="saveContent()">Save Content</button>
+      </div>
+      <div class="bg-white rounded-2xl border p-4 space-y-3">
+        <h3 class="font-bold mb-3">Restaurant Status</h3>
+        <p class="text-sm text-muted">Open your store to take new orders or close it to show a friendly offline message.</p>
+        <button class="admin-btn ${settingsData.isOpen !== false ? 'success' : 'secondary'}" onclick="toggleRestaurantStatus()">${settingsData.isOpen !== false ? 'Open' : 'Closed'}</button>
+      </div>
+    </div>
+  `;
+}
+
+async function saveContent() {
+  const sections = [];
+  const sectionCards = document.querySelectorAll('[data-section-role="section-card"]');
+  sectionCards.forEach((card) => {
+    const index = Number(card.getAttribute('data-section-index'));
+    sections.push({
+      title: document.getElementById(`section-title-${index}`)?.value || '',
+      text: document.getElementById(`section-text-${index}`)?.value || '',
+      image: document.getElementById(`section-image-${index}`)?.value || '',
+      buttonText: document.getElementById(`section-button-text-${index}`)?.value || '',
+      buttonLink: document.getElementById(`section-button-link-${index}`)?.value || '#'
+    });
+  });
+  const payload = {
+    heroText: document.getElementById('content-hero').value,
+    aboutText: document.getElementById('content-about').value,
+    businessHours: document.getElementById('content-hours').value,
+    heroImage: document.getElementById('content-hero-image').value,
+    sections
+  };
+  const res = await fetch('/api/admin/content', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (res.ok) {
+    siteContent = { ...siteContent, ...payload };
+    await loadAppData();
+    renderHome();
+    renderAdmin();
+    showToast('Content updated', 'success');
+  }
+}
+
+async function toggleRestaurantStatus() {
+  const next = settingsData.isOpen !== false ? false : true;
+  const res = await fetch('/api/admin/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isOpen: next })
+  });
+  if (res.ok) {
+    settingsData.isOpen = next;
+    await loadAppData();
+    renderHome();
+    showToast(next ? 'Restaurant opened' : 'Restaurant closed', 'success');
+    renderAdmin();
+  }
+}
+
+function renderAdminSettings() {
+  return `
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="bg-white rounded-2xl border p-4 space-y-3">
+        <h3 class="font-bold mb-3">Business Settings</h3>
+        <input id="settings-name" class="admin-input" value="${settingsData.restaurantName || 'Golivia\'s Place'}" placeholder="Restaurant name">
+        <input id="settings-phone" class="admin-input" value="${settingsData.phone || '09043474647'}" placeholder="Phone">
+        <input id="settings-email" class="admin-input" value="${settingsData.email || 'goliviaresources2010@gmail.com'}" placeholder="Email">
+        <input id="settings-address" class="admin-input" value="${settingsData.address || 'Makurdi, Benue State'}" placeholder="Address">
+        <input id="settings-currency" class="admin-input" value="${settingsData.currency || 'NGN'}" placeholder="Currency">
+        <button class="admin-btn" onclick="saveSettings()">Save Settings</button>
+      </div>
+      <div class="bg-white rounded-2xl border p-4 space-y-3">
+        <h3 class="font-bold mb-3">Delivery & Payments</h3>
+        <input id="settings-deliveryFee" class="admin-input" value="${settingsData.deliveryFee || 500}" placeholder="Delivery fee">
+        <input id="settings-minOrder" class="admin-input" value="${settingsData.minimumOrder || 10000}" placeholder="Minimum order">
+        <input id="settings-tax" class="admin-input" value="${settingsData.taxPercentage || 0}" placeholder="Tax percentage">
+        <button class="admin-btn" onclick="saveSettings()">Apply</button>
+      </div>
+    </div>
+  `;
+}
+
+async function saveSettings() {
+  const payload = {
+    restaurantName: document.getElementById('settings-name').value,
+    phone: document.getElementById('settings-phone').value,
+    email: document.getElementById('settings-email').value,
+    address: document.getElementById('settings-address').value,
+    currency: document.getElementById('settings-currency').value,
+    deliveryFee: Number(document.getElementById('settings-deliveryFee').value || 0),
+    minimumOrder: Number(document.getElementById('settings-minOrder').value || 0),
+    taxPercentage: Number(document.getElementById('settings-tax').value || 0)
+  };
+  const res = await fetch('/api/admin/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (res.ok) {
+    settingsData = { ...settingsData, ...payload };
+    await loadAppData();
+    renderHome();
+    showToast('Settings updated', 'success');
+  }
+}
+
+function renderAdminProfile() {
+  return `
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="bg-white rounded-2xl border p-4 space-y-3">
+        <h3 class="font-bold mb-3">Profile Details</h3>
+        <input id="profile-name" class="admin-input" value="${adminProfile.name || 'Admin'}" placeholder="Name">
+        <input id="profile-email" class="admin-input" value="${adminProfile.email || 'goliviaresources2010@gmail.com'}" placeholder="Email">
+        <input id="profile-phone" class="admin-input" value="${adminProfile.phone || '+2348000000000'}" placeholder="Phone">
+        <button class="admin-btn" onclick="saveProfile()">Save Profile</button>
+      </div>
+      <div class="bg-white rounded-2xl border p-4 space-y-3">
+        <h3 class="font-bold mb-3">Password</h3>
+        <input id="profile-password" class="admin-input" type="password" placeholder="New password">
+        <button class="admin-btn" onclick="saveProfile()">Change Password</button>
+      </div>
+    </div>
+  `;
+}
+
+async function saveProfile() {
+  const payload = {
+    name: document.getElementById('profile-name').value,
+    email: document.getElementById('profile-email').value,
+    phone: document.getElementById('profile-phone').value,
+    password: document.getElementById('profile-password').value || undefined
+  };
+  const res = await fetch('/api/admin/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (res.ok) {
+    adminProfile = { ...adminProfile, ...payload };
+    await loadAppData();
+    showToast('Profile updated', 'success');
+  }
+}
+
+function saveOrders() {
+  orders = orders || [];
+  localStorage.setItem('fb_orders', JSON.stringify(orders));
+}
+
+// 加载自定义价格
+function loadCustomPrices() {
+  const saved = localStorage.getItem('fb_products');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      parsed.forEach(sp => {
+        const p = PRODUCTS.find(x => x.id === sp.id);
+        if (p) p.price = sp.price;
+      });
+    } catch(e) {}
+  }
+}
+
+// ========================================
+// 初始化
+// ========================================
+async function init() {
+  loadCustomPrices();
+  await loadAppData();
+  renderHome();
+  updateStickyCart();
+
+  const counter = document.getElementById('order-counter');
+  if (counter) {
+    let count = 0;
+    const target = 120 + orders.length * 3;
+    const step = Math.ceil(target / 40);
+    const interval = setInterval(() => {
+      count += step;
+      if (count >= target) { count = target; clearInterval(interval); }
+      counter.textContent = count + '+';
+    }, 30);
+  }
+}
+
+init();
+</script>
+</body>
+</html>

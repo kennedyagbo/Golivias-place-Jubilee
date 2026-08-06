@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: golivia-place
+    env: node
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: golivia-data
+      mountPath: /var/data
+      sizeGB: 1
