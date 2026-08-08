@@ -110,6 +110,14 @@ function sanitizeFileName(fileName) {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}-${base}${ext}`;
 }
 
+function categoryIdFromName(name) {
+  return String(name || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const pathname = url.pathname;
@@ -169,7 +177,16 @@ const server = http.createServer((req, res) => {
         return;
       }
       try {
+        const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
+        if (!allowedTypes.has(payload.contentType)) {
+          sendJson(res, 400, { success: false, error: 'Please upload a JPG, PNG, WEBP, or GIF image' });
+          return;
+        }
         const buffer = Buffer.from(payload.data || '', 'base64');
+        if (!buffer.length || buffer.length > 1024 * 1024) {
+          sendJson(res, 400, { success: false, error: 'Image must be smaller than 1 MB' });
+          return;
+        }
         const fileName = sanitizeFileName(payload.fileName || 'upload');
         const filePath = path.join(uploadsDir, fileName);
         fs.writeFileSync(filePath, buffer);
@@ -264,8 +281,27 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ success: false, error: 'Invalid JSON body' }));
         return;
       }
+      const name = String(payload.name || '').trim();
+      const category = String(payload.category || '').trim();
+      const price = Number(payload.price);
+      const image = String(payload.image || '').trim();
+      if (!name || !category || !image || !Number.isFinite(price) || price < 0) {
+        sendJson(res, 400, { success: false, error: 'Name, category, image, and a valid price are required' });
+        return;
+      }
       const store = readStore();
-      const product = { id: `prod-${Date.now()}`, ...payload, isAvailable: payload.isAvailable !== false };
+      const product = {
+        id: `prod-${Date.now()}`,
+        name,
+        category,
+        price,
+        image,
+        desc: String(payload.desc || ''),
+        stock: Math.max(0, Number(payload.stock) || 0),
+        isAvailable: payload.isAvailable !== false,
+        bestSeller: false,
+        special: false
+      };
       store.products = [...store.products, product];
       writeStore(store);
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -308,8 +344,18 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ success: false, error: 'Invalid JSON body' }));
         return;
       }
+      const name = String(payload.name || '').trim();
+      const id = categoryIdFromName(name);
       const store = readStore();
-      const category = { id: `cat-${Date.now()}`, name: payload.name };
+      if (!id) {
+        sendJson(res, 400, { success: false, error: 'Category name is required' });
+        return;
+      }
+      if ((store.categories || []).some(category => category.id === id || category.name.toLowerCase() === name.toLowerCase())) {
+        sendJson(res, 409, { success: false, error: 'That category already exists' });
+        return;
+      }
+      const category = { id, name };
       store.categories = [...store.categories, category];
       writeStore(store);
       res.writeHead(200, { 'Content-Type': 'application/json' });

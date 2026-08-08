@@ -106,7 +106,7 @@
       "name": "Cake (Small)",
       "price": 5000,
       "category": "cakes",
-      "image": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop",
+      "image": "Medium cake.jpeg",
       "desc": "Small celebration cake — serves 6-8 people.",
       "ingredients": "Flour, sugar, butter, eggs, vanilla, frosting, food colors.",
       "allergens": "Contains wheat (gluten), eggs, dairy.",
@@ -160,20 +160,6 @@
       "unit": "per plate",
       "isAvailable": true,
       "stock": 4
-    },
-    {
-      "id": "smoothie",
-      "name": "Smoothie",
-      "price": 1500,
-      "category": "drinks",
-      "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=400&fit=crop",
-      "desc": "Fresh, creamy fruit smoothie.",
-      "ingredients": "Fresh fruits, yogurt, ice.",
-      "allergens": "Contains dairy.",
-      "bestSeller": false,
-      "special": false,
-      "isAvailable": true,
-      "stock": 6
     },
     {
       "id": "coke",
@@ -254,28 +240,15 @@
       "name": "Cakes"
     },
     {
+      "id": "local-dishes",
+      "name": "Local Dishes"
+    },
+    {
       "id": "drinks",
       "name": "Drinks"
     }
   ],
-  "promotions": [
-    {
-      "id": "promo-1",
-      "name": "Free Delivery",
-      "code": "FREEDELIVERY",
-      "type": "FREE_DELIVERY",
-      "value": 0,
-      "active": true
-    },
-    {
-      "id": "promo-2",
-      "name": "First Order Discount",
-      "code": "FIRSTORDER",
-      "type": "PERCENT",
-      "value": 10,
-      "active": true
-    }
-  ],
+  "promotions": [],
   "reviews": [],
   "customers": [],
   "siteContent": {

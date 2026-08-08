@@ -47,23 +47,8 @@ img { max-width:100%; }
 /* 食物背景混合层 */
 .food-bg-layer {
   position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.04;
-  background-image:
-    url('https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1548507200-cf21f2ae402e?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop'),
-    url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop');
-  background-size: 200px 200px;
-  background-repeat: repeat;
-  mix-blend-mode: multiply;
-  animation: bgDrift 60s linear infinite;
-}
-@keyframes bgDrift {
-  0% { background-position: 0 0, 100px 50px, 200px 100px, 50px 150px, 150px 0, 250px 50px, 100px 200px, 0 100px; }
-  100% { background-position: 200px 200px, 300px 250px, 0 300px, 250px 350px, 350px 200px, 50px 250px, 300px 0, 200px 300px; }
+  background:radial-gradient(circle at 20% 20%, #E53935 0 2px, transparent 3px), radial-gradient(circle at 80% 60%, #FB8C00 0 2px, transparent 3px);
+  background-size:48px 48px, 72px 72px;
 }
 
 /* 视图切换 */
@@ -330,14 +315,6 @@ img { max-width:100%; }
         <span><i class="fas fa-shield-alt mr-1 text-blue-400"></i> Secure Payment</span>
       </div>
       <div id="status-banner" class="mt-6 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white/90 hidden"></div>
-    </div>
-  </section>
-
-  <!-- 折扣横幅 -->
-  <section class="px-4 -mt-10 relative z-10 max-w-lg mx-auto mb-8">
-    <div class="promo-banner">
-      <p class="font-extrabold text-lg mb-1">Free Delivery!</p>
-      <p class="text-sm text-white/90">On all orders above ₦10,000. Use code <strong>FREEDELIVERY</strong></p>
     </div>
   </section>
 
@@ -650,7 +627,7 @@ let PRODUCTS = [
   },
   {
     id:'cake-small', name:'Cake (Small)', price:5000, category:'cakes',
-    image:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop',
+    image:'Medium cake.jpeg',
     desc:'Small celebration cake — serves 6-8 people.',
     ingredients:'Flour, sugar, butter, eggs, vanilla, frosting, food colors.',
     allergens:'Contains wheat (gluten), eggs, dairy.',
@@ -679,14 +656,6 @@ let PRODUCTS = [
     ingredients:'Cassava, palm oil, onions, garden eggs, spices.',
     allergens:'None.',
     bestSeller:false, special:false, unit:'per plate'
-  },
-  {
-    id:'smoothie', name:'Smoothie', price:1500, category:'drinks',
-    image:'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=400&fit=crop',
-    desc:'Fresh, creamy fruit smoothie.',
-    ingredients:'Fresh fruits, yogurt, ice.',
-    allergens:'Contains dairy.',
-    bestSeller:false, special:false
   },
   {
     id:'coke', name:'Coke', price:500, category:'drinks',
@@ -740,20 +709,7 @@ const DELIVERY_ZONES = [
   {id:'other', name:'Other Location (Specify in address)', fee:1200, time:'40-60 min'}
 ];
 
-let PROMO_CODES = {
-  'FIRSTORDER': { type:'percent', value:10, label:'10% off your first order' },
-  'FREEDELIVERY': { type:'free_delivery', value:0, label:'Free delivery' },
-  'CHOP500': { type:'fixed', value:500, label:'₦500 off' }
-};
-
-const TESTIMONIALS = [
-  { name:'Aisha M.', text:'Best meat pie in Makurdi! Always fresh and delivered on time. My family orders every weekend.', rating:5 },
-  { name:'Emeka T.', text:'The doughnuts are heavenly. Soft, sweet, and the delivery is super fast. Highly recommend!', rating:5 },
-  { name:'Blessing O.', text:'Ordered a medium cake for my birthday. It was beautiful and tasted amazing. Everyone loved it!', rating:5 },
-  { name:'John A.', text:'Puff puff and chin chin combo is the perfect snack. Great value for money.', rating:4 },
-  { name:'Fatima B.', text:'Their spring rolls are crispy and filled with fresh vegetables. Will order again!', rating:5 },
-  { name:'David I.', text:'Fast delivery to North Bank. The bread was still warm when it arrived. Excellent service.', rating:4 }
-];
+let PROMO_CODES = {};
 
 const FAQS = [
   { q:'How long does delivery take?', a:'Delivery within Makurdi typically takes 15-45 minutes depending on your location. We deliver same-day for all orders placed before 7 PM.' },
@@ -917,22 +873,13 @@ function renderHome() {
       <div class="bg-white rounded-2xl overflow-hidden shadow-sm mb-4 ${section.image ? 'md:grid md:grid-cols-[0.9fr_1.1fr]' : ''}">
         ${section.image ? `<img src="${section.image}" alt="${section.title || 'Section image'}" class="w-full h-48 object-cover" loading="lazy">` : ''}
         <div class="p-5">
-          <h3 class="font-extrabold text-lg mb-2">${section.title || 'New Section'}</h3>
+          <h3 class="font-extrabold text-lg mb-2">${section.title || ''}</h3>
           <p class="text-sm text-muted leading-relaxed">${section.text || ''}</p>
           ${section.buttonText ? `<a href="${section.buttonLink || '#'}" target="_blank" class="btn-brand btn-sm inline-flex mt-4">${section.buttonText}</a>` : ''}
         </div>
       </div>
     `).join('') : '';
   }
-
-  // 评价
-  document.getElementById('testimonials-grid').innerHTML = TESTIMONIALS.slice(0,3).map(t => `
-    <div class="bg-white rounded-2xl p-5 shadow-sm">
-      <div class="stars mb-2">${'<i class="fas fa-star"></i>'.repeat(t.rating)}${'<i class="far fa-star"></i>'.repeat(5-t.rating)}</div>
-      <p class="text-sm text-muted leading-relaxed">"${t.text}"</p>
-      <p class="font-bold text-sm mt-3">${t.name}</p>
-    </div>
-  `).join('');
 
   // FAQ
   document.getElementById('faq-list').innerHTML = FAQS.map((f,i) => `
@@ -967,6 +914,19 @@ let CATEGORIES = [
   {id:'local-dishes', label:'Local Dishes'},
   {id:'drinks', label:'Drinks'}
 ];
+
+function getProductCategories() {
+  const result = new Map();
+  [...CATEGORIES.filter(category => category.id !== 'all'), ...categoriesData].forEach(category => {
+    if (category?.id && (category.name || category.label)) result.set(category.id, { id: category.id, name: category.name || category.label });
+  });
+  PRODUCTS.forEach(product => {
+    if (!product.category || result.has(product.category)) return;
+    const name = product.category.replace(/-/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase());
+    result.set(product.category, { id: product.category, name });
+  });
+  return [...result.values()];
+}
 
 function renderMenu() {
   // 分类过滤器
@@ -1673,9 +1633,7 @@ async function loadAppData() {
     if (payload.siteContent) siteContent = payload.siteContent;
     if (payload.adminProfile) adminProfile = payload.adminProfile;
     if (payload.notifications) adminNotifications = payload.notifications;
-    if (payload.categories && payload.categories.length) {
-      CATEGORIES = [{id:'all', label:'All'}].concat(payload.categories.map(c => ({ id: c.id, label: c.name })));
-    }
+    CATEGORIES = [{id:'all', label:'All'}].concat(getProductCategories().map(category => ({ id: category.id, label: category.name })));
     if (payload.promotions) {
       PROMO_CODES = {};
       payload.promotions.filter(p => p.active).forEach(p => {
@@ -1932,6 +1890,7 @@ async function updateOrderStatus(orderId, status) {
 }
 
 function renderAdminMenu() {
+  const productCategories = getProductCategories();
   return `
     <div class="grid lg:grid-cols-[1.3fr,0.7fr] gap-4">
       <div class="bg-white rounded-2xl border p-4">
@@ -1954,10 +1913,18 @@ function renderAdminMenu() {
       <div class="bg-white rounded-2xl border p-4">
         <h3 class="font-bold mb-3">Add/Edit Product</h3>
         <div class="space-y-3">
-          <input id="product-name" class="admin-input" placeholder="Food name">
-          <input id="product-price" class="admin-input" type="number" placeholder="Price">
-          <input id="product-image" class="admin-input" placeholder="Image URL">
-          <input id="product-category" class="admin-input" placeholder="Category">
+          <input id="product-name" class="admin-input" placeholder="Dish name, e.g. Chicken Pie">
+          <input id="product-price" class="admin-input" type="number" min="0" placeholder="Price in naira, e.g. 1500">
+          <label class="text-xs font-semibold text-muted block">Section / category</label>
+          <select id="product-category" class="admin-select">
+            <option value="">Choose a section</option>
+            ${productCategories.map(category => `<option value="${category.id}">${category.name}</option>`).join('')}
+          </select>
+          <p class="text-xs text-muted -mt-1">Need another section? Add it in the Categories tab first.</p>
+          <label class="text-xs font-semibold text-muted block">Dish photo</label>
+          <input id="product-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-input" onchange="handleAdminImageSelection(event, 'product-image')">
+          <input id="product-image" class="admin-input" placeholder="Image URL (filled automatically after upload)">
+          <img id="product-image-preview" class="hidden w-full h-32 object-cover rounded-xl border" alt="Selected dish preview">
           <input id="product-stock" class="admin-input" type="number" placeholder="Stock quantity" value="10">
           <textarea id="product-desc" class="admin-textarea" rows="3" placeholder="Description"></textarea>
           <div class="flex gap-2">
@@ -1982,8 +1949,8 @@ async function saveProductFromForm() {
     special: false,
     stock: Number(document.getElementById('product-stock')?.value || 10)
   };
-  if (!payload.name) {
-    showToast('Please enter a product name', 'error');
+  if (!payload.name || !payload.category || !payload.price || !payload.image) {
+    showToast('Please enter the dish name, section, price, and photo', 'error');
     return;
   }
   const res = await fetch('/api/admin/products', {
@@ -2026,10 +1993,11 @@ async function deleteProduct(productId) {
 }
 
 function clearProductForm() {
-  ['product-name','product-price','product-image','product-category','product-stock','product-desc'].forEach(id => {
+  ['product-name','product-price','product-image','product-category','product-stock','product-desc','product-image-file'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = id === 'product-stock' ? '10' : '';
   });
+  document.getElementById('product-image-preview')?.classList.add('hidden');
 }
 
 function renderAdminCategories() {
@@ -2038,7 +2006,7 @@ function renderAdminCategories() {
       <div class="bg-white rounded-2xl border p-4">
         <h3 class="font-bold mb-3">Categories</h3>
         <div class="space-y-2">
-          ${(categoriesData.length ? categoriesData : [{name:'Pastries'},{name:'Drinks'}]).map((category, index) => `
+          ${categoriesData.map((category, index) => `
             <div class="flex items-center justify-between border-b py-2">
               <div>
                 <div class="font-semibold">${category.name}</div>
@@ -2046,7 +2014,7 @@ function renderAdminCategories() {
               </div>
               <button class="admin-btn secondary" onclick="deleteCategory('${category.id || category.name}')">Delete</button>
             </div>
-          `).join('')}
+          `).join('') || '<p class="text-sm text-muted py-4">No categories yet. Add your first category below.</p>'}
         </div>
       </div>
       <div class="bg-white rounded-2xl border p-4">
@@ -2115,7 +2083,7 @@ function renderAdminPromotions() {
       <div class="bg-white rounded-2xl border p-4">
         <h3 class="font-bold mb-3">Active Promotions</h3>
         <div class="space-y-2">
-          ${(promotionsData.length ? promotionsData : [{ name:'Free Delivery', code:'FREEDELIVERY', value:0, active:true }]).map(promo => `
+          ${promotionsData.map(promo => `
             <div class="flex items-center justify-between border-b py-2">
               <div>
                 <div class="font-semibold">${promo.name}</div>
@@ -2123,7 +2091,7 @@ function renderAdminPromotions() {
               </div>
               <button class="admin-btn secondary" onclick="togglePromotion('${promo.id || promo.code}')">${promo.active ? 'Deactivate' : 'Activate'}</button>
             </div>
-          `).join('')}
+          `).join('') || '<p class="text-sm text-muted py-4">No promotions have been created.</p>'}
         </div>
       </div>
       <div class="bg-white rounded-2xl border p-4">
@@ -2181,7 +2149,7 @@ function renderAdminReviews() {
       <table class="admin-table">
         <thead><tr><th>Customer</th><th>Rating</th><th>Review</th><th>Status</th><th>Action</th></tr></thead>
         <tbody>
-          ${(reviewsData.length ? reviewsData : [{ userName:'Aisha', rating:5, comment:'Great service', isApproved:true }]).map(review => `
+          ${reviewsData.map(review => `
             <tr>
               <td>${review.userName || 'Guest'}</td>
               <td>${'★'.repeat(review.rating || 0)}</td>
@@ -2189,7 +2157,7 @@ function renderAdminReviews() {
               <td>${review.isApproved ? 'Approved' : 'Hidden'}</td>
               <td><button class="admin-btn secondary" onclick="toggleReview('${review.id}')">${review.isApproved ? 'Hide' : 'Approve'}</button></td>
             </tr>
-          `).join('')}
+          `).join('') || '<tr><td colspan="5" class="text-center text-muted py-6">No customer reviews yet.</td></tr>'}
         </tbody>
       </table>
     </div>
@@ -2238,7 +2206,7 @@ function exportReports() {
 
 function addContentSection() {
   const sections = Array.isArray(siteContent.sections) ? siteContent.sections : [];
-  sections.push({ title: 'New Section', text: 'Describe this section', image: '', buttonText: '', buttonLink: '#' });
+  sections.push({ title: '', text: '', image: '', buttonText: '', buttonLink: '#' });
   siteContent.sections = sections;
   renderAdmin();
 }
@@ -2266,6 +2234,13 @@ async function handleAdminImageSelection(event, targetId) {
       if (res.ok && data.success) {
         const input = document.getElementById(targetId);
         if (input) input.value = data.url;
+        if (targetId === 'product-image') {
+          const preview = document.getElementById('product-image-preview');
+          if (preview) {
+            preview.src = data.url;
+            preview.classList.remove('hidden');
+          }
+        }
         showToast('Image uploaded', 'success');
       } else {
         showToast('Image upload failed', 'error');
