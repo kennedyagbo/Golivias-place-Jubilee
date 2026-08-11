@@ -43,6 +43,34 @@ function publicStore(store) {
   };
 }
 
+function adminData(store) {
+  // Credential hashes must never be returned to the browser, even to an
+  // authenticated administrator.
+  const { adminCredentials, ...data } = store;
+  return data;
+}
+
+function hashPassword(password, salt = crypto.randomBytes(16).toString('hex')) {
+  return {
+    salt,
+    passwordHash: crypto.scryptSync(password, salt, 64).toString('hex')
+  };
+}
+
+function passwordsMatch(password, credentials) {
+  if (!credentials || !credentials.salt || !credentials.passwordHash) return false;
+  const candidate = crypto.scryptSync(password, credentials.salt, 64);
+  const stored = Buffer.from(credentials.passwordHash, 'hex');
+  return candidate.length === stored.length && crypto.timingSafeEqual(candidate, stored);
+}
+
+function verifyAdminPassword(password, store) {
+  if (store.adminCredentials) return passwordsMatch(password, store.adminCredentials);
+  if (!ADMIN_PASSWORD) return false;
+  const expected = String(ADMIN_PASSWORD);
+  return password.length === expected.length && crypto.timingSafeEqual(Buffer.from(password), Buffer.from(expected));
+}
+
 function readStore() {
   try {
     return JSON.parse(readFileSync(dataPath, 'utf8'));
@@ -140,14 +168,14 @@ const server = http.createServer((req, res) => {
           res.end(JSON.stringify({ success: false, error: 'Invalid JSON body' }));
           return;
         }
-        if (!ADMIN_PASSWORD) {
+        const store = readStore();
+        if (!ADMIN_PASSWORD && !store.adminCredentials) {
           res.writeHead(503, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ success: false, error: 'Admin login is not configured' }));
           return;
         }
         const supplied = String(payload.password || '');
-        const expected = String(ADMIN_PASSWORD);
-        const success = supplied.length === expected.length && crypto.timingSafeEqual(Buffer.from(supplied), Buffer.from(expected));
+        const success = verifyAdminPassword(supplied, store);
         if (!success) return sendJson(res, 401, { success: false });
         const token = crypto.randomBytes(32).toString('hex');
         sessions.set(token, Date.now() + (8 * 60 * 60 * 1000));
@@ -165,7 +193,7 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/admin/data') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(readStore()));
+    res.end(JSON.stringify(adminData(readStore())));
     return;
   }
 
@@ -465,10 +493,35 @@ const server = http.createServer((req, res) => {
         return;
       }
       const store = readStore();
-      store.adminProfile = { ...store.adminProfile, ...payload };
+      const { password, currentPassword, ...profile } = payload;
+      store.adminProfile = { ...store.adminProfile, ...profile };
       writeStore(store);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true }));
+    });
+    return;
+  }
+
+  if (pathname === '/api/admin/password' && req.method === 'PUT') {
+    readJsonBody(req, (error, payload) => {
+      if (error) return sendJson(res, 400, { success: false, error: 'Invalid JSON body' });
+      const currentPassword = String(payload.currentPassword || '');
+      const newPassword = String(payload.newPassword || '');
+      if (!currentPassword || !newPassword) {
+        return sendJson(res, 400, { success: false, error: 'Your current password and a new password are required' });
+      }
+      if (newPassword.length < 8) {
+        return sendJson(res, 400, { success: false, error: 'New password must be at least 8 characters' });
+      }
+      const store = readStore();
+      if (!verifyAdminPassword(currentPassword, store)) {
+        return sendJson(res, 401, { success: false, error: 'Current password is incorrect' });
+      }
+      store.adminCredentials = hashPassword(newPassword);
+      writeStore(store);
+      // A password change invalidates every active administrator session.
+      sessions.clear();
+      sendJson(res, 200, { success: true, requiresReauthentication: true });
     });
     return;
   }

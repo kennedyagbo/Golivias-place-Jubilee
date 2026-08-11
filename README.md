@@ -6,6 +6,7 @@ Production-ready ordering website for Golivia's Place, Makurdi. Customers can br
 
 - Responsive customer and admin experience for phones, tablets, and desktop browsers.
 - Protected admin API: a password alone does not expose or permit dashboard operations; login creates an eight-hour session.
+- Admins can change their password from **Admin Profile**. The replacement is stored securely on the persistent disk, takes effect immediately, and signs out every active admin session. After the first change, it overrides the original `ADMIN_PASSWORD` environment value.
 - A public storefront API that does not reveal customer or order data.
 - Persistent data and image uploads when deployed with the included Render disk.
 - Health endpoint at `/healthz` for Render.
