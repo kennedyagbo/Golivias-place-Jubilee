@@ -1198,7 +1198,7 @@ function updateCartSummary() {
   // 计算折扣
   if (appliedPromo) {
     if (appliedPromo.type === 'percent') discount = Math.round(subtotal * appliedPromo.value / 100);
-    else if (appliedPromo.type === 'fixed') discount = appliedPromo.value;
+    else if (appliedPromo.type === 'fixed') discount = Math.min(subtotal, appliedPromo.value);
   }
 
   // 满额免运费
@@ -1224,27 +1224,31 @@ function updateCartSummary() {
   document.getElementById('sum-total').textContent = '₦' + total.toLocaleString();
 }
 
-function applyPromo() {
+async function applyPromo() {
   const code = document.getElementById('promo-input').value.trim().toUpperCase();
   const msgEl = document.getElementById('promo-msg');
 
   if (!code) { showToast('Enter a promo code', 'error'); return; }
 
-  const promo = PROMO_CODES[code];
-  if (!promo) {
-    msgEl.textContent = 'Invalid promo code';
+  if (!cart.length) { showToast('Add an item before applying a promo code', 'error'); return; }
+  try {
+    const response = await fetch('/api/promotions/validate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, items: cart })
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || 'Invalid promo code');
+    const promo = data.promotion;
+    appliedPromo = { type: String(promo.type).toLowerCase(), value: Number(promo.value || 0), label: promo.name, code: promo.code };
+    msgEl.textContent = 'Applied: ' + promo.name;
+    msgEl.className = 'text-xs mt-2 font-medium text-green';
+    msgEl.classList.remove('hidden');
+    showToast('Promo code applied!', 'success');
+  } catch (error) {
+    msgEl.textContent = error.message || 'Promo code could not be applied';
     msgEl.className = 'text-xs mt-2 font-medium text-red-500';
     msgEl.classList.remove('hidden');
     appliedPromo = null;
-    updateDeliveryFee();
-    return;
   }
-
-  appliedPromo = promo;
-  msgEl.textContent = 'Applied: ' + promo.label;
-  msgEl.className = 'text-xs mt-2 font-medium text-green';
-  msgEl.classList.remove('hidden');
-  showToast('Promo code applied!', 'success');
   updateDeliveryFee();
 }
 
@@ -1272,16 +1276,10 @@ async function placeOrder() {
   if (deliveryOpt === 'delivery' && !address) { showToast('Please enter your exact address', 'error'); return; }
 
   const subtotal = getCartSubtotal();
-  let discount = 0;
-  if (appliedPromo) {
-    if (appliedPromo.type === 'percent') discount = Math.round(subtotal * appliedPromo.value / 100);
-    else if (appliedPromo.type === 'fixed') discount = appliedPromo.value;
-  }
   const isPickup = deliveryOpt === 'pickup';
   const zone = DELIVERY_ZONES.find(z => z.id === area);
   let finalDelivery = isPickup ? 0 : (zone ? zone.fee : 0);
   if (subtotal >= 10000 || (appliedPromo && appliedPromo.type === 'free_delivery')) finalDelivery = 0;
-  const total = Math.max(0, subtotal - discount + finalDelivery);
 
   const orderId = 'FB-' + Date.now().toString(36).toUpperCase();
   const order = {
@@ -1295,37 +1293,36 @@ async function placeOrder() {
     delivery: { type: deliveryOpt, fee: finalDelivery, time: zone ? zone.time : 'N/A' },
     payment,
     promo: appliedPromo ? document.getElementById('promo-input').value.trim().toUpperCase() : null,
-    subtotal, discount, total,
     notes,
     status: 'NEW',
     paymentStatus: 'PENDING',
     timestamp: new Date().toISOString()
   };
 
-  orders.push(order);
-  saveOrders();
   try {
     const res = await fetch('/api/admin/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
     });
-    if (!res.ok) throw new Error('Could not sync order');
     const saved = await res.json();
+    if (!res.ok || !saved.success) throw new Error(saved.error || 'Could not save your order');
     if (saved.order) {
-      orders[orders.length - 1] = saved.order;
+      orders.push(saved.order);
       saveOrders();
     }
   } catch (err) {
     console.warn(err);
+    showToast(err.message || 'Unable to place your order. Please try again.', 'error');
+    return;
   }
 
   cart = [];
   appliedPromo = null;
   saveCart();
   updateStickyCart();
-  sendOwnerNotification(order);
   const confirmedOrder = orders[orders.length - 1] || order;
+  sendOwnerNotification(confirmedOrder);
   const waLink = `https://wa.me/23409043474647?text=${encodeURIComponent('Hi, I just placed order ' + confirmedOrder.id + '. My name is ' + confirmedOrder.customer.name + '. Please share the receipt and order details.')}`;
   showToast('Please share your receipt and order details on WhatsApp.', 'info');
   setTimeout(() => {
@@ -2096,18 +2093,23 @@ function renderAdminPromotions() {
                 <div class="font-semibold">${promo.name}</div>
                 <div class="text-xs text-muted">${promo.code} • ${promo.active ? 'Active' : 'Inactive'}</div>
               </div>
-              <button class="admin-btn secondary" onclick="togglePromotion('${promo.id || promo.code}')">${promo.active ? 'Deactivate' : 'Activate'}</button>
+              <div class="flex gap-2"><button class="admin-btn secondary" onclick="editPromotion('${promo.id || promo.code}')">Edit</button><button class="admin-btn secondary" onclick="togglePromotion('${promo.id || promo.code}')">${promo.active ? 'Deactivate' : 'Activate'}</button><button class="admin-btn secondary" onclick="deletePromotion('${promo.id || promo.code}')">Delete</button></div>
             </div>
           `).join('') || '<p class="text-sm text-muted py-4">No promotions have been created.</p>'}
         </div>
       </div>
       <div class="bg-white rounded-2xl border p-4">
-        <h3 class="font-bold mb-3">Create Promotion</h3>
+        <h3 class="font-bold mb-3" id="promo-form-title">Create Promotion</h3>
         <div class="space-y-3">
           <input id="promo-name" class="admin-input" placeholder="Promo name">
           <input id="promo-code" class="admin-input" placeholder="Promo code">
-          <input id="promo-value" class="admin-input" type="number" placeholder="Discount value">
-          <button class="admin-btn" onclick="savePromotion()">Save Promotion</button>
+          <select id="promo-type" class="admin-select" onchange="updatePromoValueHint()"><option value="PERCENT">Percentage discount</option><option value="FIXED">Fixed amount discount</option><option value="FREE_DELIVERY">Free delivery</option></select>
+          <input id="promo-value" class="admin-input" type="number" min="0" step="1" placeholder="Discount percentage (1-100)">
+          <input id="promo-min-order" class="admin-input" type="number" min="0" step="1" placeholder="Minimum order (optional)">
+          <input id="promo-max-uses" class="admin-input" type="number" min="1" step="1" placeholder="Usage limit (optional)">
+          <input id="promo-expires-at" class="admin-input" type="datetime-local" aria-label="Promotion expiry date">
+          <input id="promo-edit-id" type="hidden">
+          <div class="flex gap-2"><button class="admin-btn" onclick="savePromotion()">Save Promotion</button><button class="admin-btn secondary hidden" id="promo-cancel-edit" onclick="clearPromotionForm()">Cancel</button></div>
         </div>
       </div>
     </div>
@@ -2115,25 +2117,67 @@ function renderAdminPromotions() {
 }
 
 async function savePromotion() {
+  const editId = document.getElementById('promo-edit-id').value;
   const payload = {
-    name: document.getElementById('promo-name').value,
-    code: document.getElementById('promo-code').value.toUpperCase(),
+    name: document.getElementById('promo-name').value.trim(),
+    code: document.getElementById('promo-code').value.trim().toUpperCase(),
+    type: document.getElementById('promo-type').value,
     value: Number(document.getElementById('promo-value').value || 0),
-    active: true,
-    type: 'PERCENT'
+    minOrder: Number(document.getElementById('promo-min-order').value || 0),
+    maxUses: document.getElementById('promo-max-uses').value || null,
+    expiresAt: document.getElementById('promo-expires-at').value || null,
+    active: true
   };
-  const res = await fetch('/api/admin/promotions', {
-    method: 'POST',
+  const res = await fetch(editId ? `/api/admin/promotions/${editId}` : '/api/admin/promotions', {
+    method: editId ? 'PUT' : 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
   const data = await res.json();
-  if (res.ok) {
-    promotionsData.push(data.promotion);
+  if (res.ok && data.success) {
     await loadAppData();
-    showToast('Promotion saved', 'success');
+    showToast(editId ? 'Promotion updated' : 'Promotion saved', 'success');
     renderAdmin();
+  } else {
+    showToast(data.error || 'Promotion could not be saved', 'error');
   }
+}
+
+function updatePromoValueHint() {
+  const type = document.getElementById('promo-type').value;
+  const value = document.getElementById('promo-value');
+  value.disabled = type === 'FREE_DELIVERY';
+  if (type === 'FREE_DELIVERY') value.value = 0;
+  value.placeholder = type === 'PERCENT' ? 'Discount percentage (1-100)' : type === 'FIXED' ? 'Discount amount in naira' : 'No discount value needed';
+}
+
+function clearPromotionForm() { renderAdmin(); }
+
+function editPromotion(promoId) {
+  const promo = promotionsData.find(item => (item.id || item.code) === promoId);
+  if (!promo) return;
+  document.getElementById('promo-edit-id').value = promo.id || promo.code;
+  document.getElementById('promo-name').value = promo.name || '';
+  document.getElementById('promo-code').value = promo.code || '';
+  document.getElementById('promo-type').value = promo.type || 'PERCENT';
+  document.getElementById('promo-value').value = promo.value || 0;
+  document.getElementById('promo-min-order').value = promo.minOrder || '';
+  document.getElementById('promo-max-uses').value = promo.maxUses || '';
+  document.getElementById('promo-expires-at').value = promo.expiresAt ? new Date(promo.expiresAt).toISOString().slice(0, 16) : '';
+  document.getElementById('promo-form-title').textContent = 'Edit Promotion';
+  document.getElementById('promo-cancel-edit').classList.remove('hidden');
+  updatePromoValueHint();
+  document.getElementById('promo-name').focus();
+}
+
+async function deletePromotion(promoId) {
+  if (!confirm('Delete this promotion? This cannot be undone.')) return;
+  const res = await fetch(`/api/admin/promotions/${promoId}`, { method: 'DELETE' });
+  const data = await res.json();
+  if (!res.ok || !data.success) return showToast(data.error || 'Promotion could not be deleted', 'error');
+  await loadAppData();
+  showToast('Promotion deleted', 'success');
+  renderAdmin();
 }
 
 async function togglePromotion(promoId) {

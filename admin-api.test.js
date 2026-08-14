@@ -73,9 +73,25 @@ test('storefront is public and admin operations require a signed-in session', as
     const categoryId = JSON.parse(category.body).category.id;
     assert.equal((await request('DELETE', `/api/admin/categories/${categoryId}`, undefined, auth)).statusCode, 200);
 
-    const promotion = await request('POST', '/api/admin/promotions', { code: 'TEST10', name: 'Test promotion', value: 10, active: true }, auth);
+    const promotion = await request('POST', '/api/admin/promotions', { code: 'TEST10', name: 'Test promotion', type: 'PERCENT', value: 10, minOrder: 1000, maxUses: 1, active: true }, auth);
     assert.equal(promotion.statusCode, 200);
     const promotionId = JSON.parse(promotion.body).promotion.id;
+    const promoCheck = await request('POST', '/api/promotions/validate', { code: 'TEST10', items: [{ id: 'meat-pie', qty: 2 }] });
+    assert.equal(promoCheck.statusCode, 200);
+    assert.equal(JSON.parse(promoCheck.body).discount, 200);
+    const promoOrder = await request('POST', '/api/admin/orders', { customer: { name: 'Promo Customer', phone: '08000000002' }, items: [{ id: 'meat-pie', qty: 2 }], delivery: { type: 'pickup', fee: 0 }, promo: 'TEST10', total: 1, discount: 99999 });
+    assert.equal(promoOrder.statusCode, 200);
+    const savedPromoOrder = JSON.parse(promoOrder.body).order;
+    assert.equal(savedPromoOrder.discount, 200);
+    assert.equal(savedPromoOrder.total, 1800);
+    assert.equal((await request('POST', '/api/promotions/validate', { code: 'TEST10', items: [{ id: 'meat-pie', qty: 2 }] })).statusCode, 400);
+    assert.equal((await request('POST', '/api/admin/promotions', { code: 'SAVE500', name: 'Fixed discount', type: 'FIXED', value: 500, active: true }, auth)).statusCode, 200);
+    const fixedPromo = JSON.parse((await request('POST', '/api/promotions/validate', { code: 'SAVE500', items: [{ id: 'meat-pie', qty: 1 }] })).body);
+    assert.equal(fixedPromo.discount, 500);
+    assert.equal((await request('POST', '/api/admin/promotions', { code: 'SHIPFREE', name: 'Free shipping', type: 'FREE_DELIVERY', value: 0, active: true }, auth)).statusCode, 200);
+    const freeDeliveryOrder = JSON.parse((await request('POST', '/api/admin/orders', { customer: { name: 'Delivery Customer', phone: '08000000003' }, items: [{ id: 'meat-pie', qty: 1 }], delivery: { type: 'delivery', fee: 800 }, promo: 'SHIPFREE' })).body).order;
+    assert.equal(freeDeliveryOrder.delivery.fee, 0);
+    assert.equal(freeDeliveryOrder.total, 1000);
     assert.equal((await request('PUT', `/api/admin/promotions/${promotionId}`, { active: false }, auth)).statusCode, 200);
     const storePath = path.join(dataDir, 'store.json');
     const testStore = JSON.parse(fs.readFileSync(storePath, 'utf8'));

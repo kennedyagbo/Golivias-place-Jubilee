@@ -146,6 +146,40 @@ function categoryIdFromName(name) {
     .replace(/(^-|-$)/g, '');
 }
 
+function normalisePromotion(payload, existing = {}) {
+  const code = String(payload.code ?? existing.code ?? '').trim().toUpperCase();
+  const name = String(payload.name ?? existing.name ?? '').trim();
+  const type = String(payload.type ?? existing.type ?? 'PERCENT').trim().toUpperCase();
+  const value = Number(payload.value ?? existing.value ?? 0);
+  const minOrder = Math.max(0, Number(payload.minOrder ?? existing.minOrder ?? 0) || 0);
+  const maxUsesInput = payload.maxUses ?? existing.maxUses ?? null;
+  const maxUses = maxUsesInput === '' || maxUsesInput === null || maxUsesInput === undefined ? null : Math.floor(Number(maxUsesInput));
+  const expiresAtInput = payload.expiresAt ?? existing.expiresAt ?? null;
+  const expiryDate = expiresAtInput ? new Date(expiresAtInput) : null;
+  const expiresAt = expiryDate && !Number.isNaN(expiryDate.getTime()) ? expiryDate.toISOString() : null;
+
+  if (!name || !/^[A-Z0-9_-]{3,30}$/.test(code)) throw new Error('Enter a name and a promo code using 3-30 letters, numbers, hyphens, or underscores');
+  if (!['PERCENT', 'FIXED', 'FREE_DELIVERY'].includes(type)) throw new Error('Promotion type is invalid');
+  if (!Number.isFinite(value) || value < 0 || (type !== 'FREE_DELIVERY' && value <= 0)) throw new Error('Enter a valid promotion value');
+  if (type === 'PERCENT' && value > 100) throw new Error('Percentage discounts cannot exceed 100%');
+  if (maxUses !== null && (!Number.isFinite(maxUses) || maxUses < 1)) throw new Error('Usage limit must be at least 1');
+  if (expiresAtInput && !expiresAt) throw new Error('Expiry date is invalid');
+
+  return { ...existing, name, code, type, value: type === 'FREE_DELIVERY' ? 0 : value, minOrder, maxUses, expiresAt, active: payload.active ?? existing.active ?? true, usedCount: Number(existing.usedCount) || 0 };
+}
+
+function evaluatePromotion(store, code, subtotal) {
+  if (!code) return { promotion: null, discount: 0, freeDelivery: false };
+  const promotion = (store.promotions || []).find(item => item.code === String(code).trim().toUpperCase());
+  if (!promotion) throw new Error('Promo code not found');
+  if (!promotion.active) throw new Error('This promo code is inactive');
+  if (promotion.expiresAt && new Date(promotion.expiresAt) < new Date()) throw new Error('This promo code has expired');
+  if (promotion.maxUses !== null && promotion.maxUses !== undefined && Number(promotion.usedCount || 0) >= Number(promotion.maxUses)) throw new Error('This promo code has reached its usage limit');
+  if (subtotal < Number(promotion.minOrder || 0)) throw new Error(`This promo code requires a minimum order of ₦${Number(promotion.minOrder || 0).toLocaleString()}`);
+  const discount = promotion.type === 'PERCENT' ? Math.round(subtotal * Number(promotion.value) / 100) : promotion.type === 'FIXED' ? Math.min(subtotal, Number(promotion.value)) : 0;
+  return { promotion, discount, freeDelivery: promotion.type === 'FREE_DELIVERY' };
+}
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const pathname = url.pathname;
@@ -157,6 +191,27 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/storefront' && req.method === 'GET') {
     sendJson(res, 200, publicStore(readStore()));
+    return;
+  }
+
+  if (pathname === '/api/promotions/validate' && req.method === 'POST') {
+    readJsonBody(req, (error, payload) => {
+      if (error) return sendJson(res, 400, { success: false, error: 'Invalid JSON body' });
+      const store = readStore();
+      const productMap = new Map((store.products || []).map(product => [product.id, product]));
+      const items = Array.isArray(payload.items) ? payload.items : [];
+      const subtotal = items.reduce((sum, item) => {
+        const product = productMap.get(item?.id);
+        const quantity = Math.max(0, Math.floor(Number(item?.qty) || 0));
+        return sum + (product && product.isAvailable !== false ? Number(product.price || 0) * quantity : 0);
+      }, 0);
+      try {
+        const result = evaluatePromotion(store, payload.code, subtotal);
+        sendJson(res, 200, { success: true, promotion: result.promotion, subtotal, discount: result.discount, freeDelivery: result.freeDelivery });
+      } catch (promoError) {
+        sendJson(res, 400, { success: false, error: promoError.message });
+      }
+    });
     return;
   }
 
@@ -246,24 +301,38 @@ const server = http.createServer((req, res) => {
       const products = new Map((store.products || []).map(product => [product.id, product]));
       const normalizedItems = items.map(item => {
         const product = products.get(item.id);
-        return product ? { id: product.id, name: product.name, price: Number(product.price) || 0, qty: Math.max(1, Math.floor(Number(item.qty))) } : null;
+        const qty = Math.max(1, Math.floor(Number(item.qty)));
+        if (!product || product.isAvailable === false) return null;
+        if (Number.isFinite(Number(product.stock)) && qty > Number(product.stock)) return null;
+        return { id: product.id, name: product.name, price: Number(product.price) || 0, qty };
       }).filter(Boolean);
-      if (!normalizedItems.length) {
-        sendJson(res, 400, { success: false, error: 'Your selected items are no longer available' });
+      if (!normalizedItems.length || normalizedItems.length !== items.length) {
+        sendJson(res, 400, { success: false, error: 'One or more selected items are unavailable or out of stock' });
         return;
       }
       const subtotal = normalizedItems.reduce((total, item) => total + item.price * item.qty, 0);
+      const deliveryType = payload.delivery?.type === 'delivery' ? 'delivery' : 'pickup';
+      const requestedDeliveryFee = deliveryType === 'delivery' ? Math.max(0, Number(payload.delivery?.fee) || 0) : 0;
+      let promoResult;
+      try {
+        promoResult = evaluatePromotion(store, payload.promo, subtotal);
+      } catch (promoError) {
+        sendJson(res, 400, { success: false, error: promoError.message });
+        return;
+      }
+      const deliveryFee = promoResult.freeDelivery ? 0 : requestedDeliveryFee;
+      const total = Math.max(0, subtotal - promoResult.discount + deliveryFee);
       const order = {
         id: `GLV-${Date.now().toString(36).toUpperCase()}`,
         orderNumber: `GLV-${Date.now().toString(36).toUpperCase()}`,
         items: normalizedItems,
         customer: { ...payload.customer, name, phone },
-        delivery: payload.delivery || { type: 'pickup', fee: 0 },
+        delivery: { ...(payload.delivery || {}), type: deliveryType, fee: deliveryFee },
         payment: 'bank-transfer',
-        promo: payload.promo || null,
+        promo: promoResult.promotion ? promoResult.promotion.code : null,
         subtotal,
-        discount: Math.max(0, Number(payload.discount) || 0),
-        total: Math.max(0, Number(payload.total) || subtotal),
+        discount: promoResult.discount,
+        total,
         notes: String(payload.notes || '').slice(0, 1000),
         status: 'NEW',
         paymentStatus: 'PENDING',
@@ -278,6 +347,15 @@ const server = http.createServer((req, res) => {
       } else {
         store.customers = [...(store.customers || []), { id: `cust-${Date.now()}`, name, phone, email: String(payload.customer?.email || ''), totalOrders: 1, totalSpent: order.total, lastOrder: order.createdAt }];
       }
+      if (promoResult.promotion) {
+        store.promotions = store.promotions.map(promotion => promotion.id === promoResult.promotion.id
+          ? { ...promotion, usedCount: Number(promotion.usedCount || 0) + 1 }
+          : promotion);
+      }
+      store.products = (store.products || []).map(product => {
+        const purchased = normalizedItems.find(item => item.id === product.id);
+        return purchased && Number.isFinite(Number(product.stock)) ? { ...product, stock: Math.max(0, Number(product.stock) - purchased.qty) } : product;
+      });
       writeStore(store);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, order }));
@@ -410,7 +488,17 @@ const server = http.createServer((req, res) => {
         return;
       }
       const store = readStore();
-      const promotion = { id: `promo-${Date.now()}`, ...payload };
+      let promotion;
+      try {
+        promotion = { id: `promo-${Date.now()}`, ...normalisePromotion(payload) };
+      } catch (promoError) {
+        sendJson(res, 400, { success: false, error: promoError.message });
+        return;
+      }
+      if ((store.promotions || []).some(item => item.code === promotion.code)) {
+        sendJson(res, 409, { success: false, error: 'That promo code already exists' });
+        return;
+      }
       store.promotions = [...store.promotions, promotion];
       writeStore(store);
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -428,11 +516,32 @@ const server = http.createServer((req, res) => {
       }
       const store = readStore();
       const promoId = pathname.split('/').pop();
-      store.promotions = store.promotions.map(promo => promo.id === promoId || promo.code === promoId ? { ...promo, ...payload } : promo);
+      const current = (store.promotions || []).find(promo => promo.id === promoId || promo.code === promoId);
+      if (!current) return sendJson(res, 404, { success: false, error: 'Promotion not found' });
+      let updated;
+      try {
+        updated = normalisePromotion(payload, current);
+      } catch (promoError) {
+        return sendJson(res, 400, { success: false, error: promoError.message });
+      }
+      if ((store.promotions || []).some(promo => promo.id !== current.id && promo.code === updated.code)) {
+        return sendJson(res, 409, { success: false, error: 'That promo code already exists' });
+      }
+      store.promotions = store.promotions.map(promo => promo.id === current.id ? updated : promo);
       writeStore(store);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
+      sendJson(res, 200, { success: true, promotion: updated });
     });
+    return;
+  }
+
+  if (pathname.startsWith('/api/admin/promotions/') && req.method === 'DELETE') {
+    const store = readStore();
+    const promoId = pathname.split('/').pop();
+    const before = (store.promotions || []).length;
+    store.promotions = (store.promotions || []).filter(promo => promo.id !== promoId && promo.code !== promoId);
+    if (store.promotions.length === before) return sendJson(res, 404, { success: false, error: 'Promotion not found' });
+    writeStore(store);
+    sendJson(res, 200, { success: true });
     return;
   }
 
